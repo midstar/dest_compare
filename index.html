@@ -1,0 +1,109 @@
+<html>
+
+<!--------------------------------------------------------------------------->
+<head>
+<title>Sweski</title>
+
+<style>
+
+table, tr, th, td {
+    border: 1px solid black;
+}
+
+</style>
+
+<script>
+
+// Defined in same order as presented in the table
+keys = [
+    "name",
+    "altitude",
+    "vertical_drop"
+];
+
+// Swedish language
+lang_swe = {
+    "name" : "Namn",
+    "altitude" : "Höjd över havet",
+    "vertical_drop" : "Fallhöjd"
+};
+
+lang = lang_swe;
+
+// Name must be unique, will be used as key in references
+database = [
+    {
+        "name" : "Stöten",
+        "altitude" : 948,
+        "vertical_drop" : 370
+    },
+    {
+        "name" : "Björnrike",
+        "altitude" : 950,
+        "vertical_drop" : 470
+    }
+];
+
+window.onload = function() {
+    updateTable("name", true);
+};
+
+function updateTable(keyToSort, ascending) {
+    var table = document.getElementById("statistics");
+
+    // Delete old elements
+    table.innerHTML = "";
+
+    // Generate titles (th)
+    var row_head = document.createElement("tr");
+    for (var i = 0 ; i < keys.length ; i++) {
+        var cell_head = document.createElement("th");
+        var symbol = "";
+        if (keys[i] == keyToSort) {
+            if (ascending) {
+                symbol = " &#8595;";
+                cell_head.setAttribute("onclick", "updateTable(\"" + keys[i] + "\", false)");
+            } else {
+                symbol = " &#8593;";
+                cell_head.setAttribute("onclick", "updateTable(\"" + keys[i] + "\", true)");
+            }
+        } else {
+            cell_head.setAttribute("onclick", "updateTable(\"" + keys[i] + "\", true)");
+        }
+        cell_head.innerHTML = lang[keys[i]] + symbol;
+        row_head.appendChild(cell_head);
+    }
+    table.appendChild(row_head);
+
+    // Sort database
+    database.sort(function(a, b) {
+        if (ascending)
+            return a[keyToSort] > b[keyToSort];
+        return a[keyToSort] < b[keyToSort];
+    });
+
+
+    // Generate data (td)
+    /*
+    for (var i = 0; i < database.length ; i++) {
+        elem = database[i];
+        var row = document.createElement("tr");
+        for (var i = 0 ; i < keys.length ; i++) {
+            var cell = document.createElement("td");
+
+        }
+    }*/
+}   
+
+</script>
+
+</head>
+
+<!--------------------------------------------------------------------------->
+<body>
+
+    <table id="statistics"></table>
+
+</body>
+
+</html>
