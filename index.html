@@ -87,7 +87,10 @@ lang_swe = {
     "piste_count" : "Antal nedfarter",
     "lift_count" : "Antal liftar",
     "chairlift_count" : "Antal stolsliftar",
-    "distance" : "Avstånd (km)"
+    "distance" : "Avstånd (km)",
+    "tab-table" : "Tabell",
+    "tab-map" : "Karta",
+    "tab-plot" : "Diagram"
 };
 
 // Name must be unique, will be used as key in references
@@ -220,6 +223,7 @@ function tabSetup(defaultTabPageId) {
     tabButtons = document.getElementsByClassName("tab-button");
     for (var i = 0; i < tabButtons.length ; i++) {
         tabButton = tabButtons[i];
+        tabButton.innerHTML = config["lang"][tabButton.id]; 
         tabButton.setAttribute("onclick", "tabShow(\"" + tabButton.id + "\")");
     }
 }
