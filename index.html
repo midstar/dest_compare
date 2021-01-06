@@ -6,6 +6,9 @@
 
 <style>
 
+/****************************************************************************/
+/* Table style */
+
 table {
     border-collapse: collapse;
     table-layout: fixed;
@@ -19,6 +22,46 @@ table {
 
 tr:nth-child(even) {
     background-color: lightblue;
+}
+
+
+/****************************************************************************/
+/* TAB style */
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tab-page {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
 }
 
 </style>
@@ -78,13 +121,15 @@ config = {
 };
 
 window.onload = function() {
+    tabSetup("tab-table");
+
     databasePreprocess();
 
     updateTable("name", true);
 };
 
 function updateTable(keyToSort, ascending) {
-    var table = document.getElementById("statistics");
+    var table = document.getElementById("table");
 
     // Delete old elements
     table.innerHTML = "";
@@ -165,6 +210,42 @@ function databasePreprocess() {
     }    
 }
 
+
+//////////////////////////////////////////////////////////////////////////////
+// TAB page handling
+
+function tabSetup(defaultTabPageId) {
+    tabShow(defaultTabPageId);
+
+    tabButtons = document.getElementsByClassName("tab-button");
+    for (var i = 0; i < tabButtons.length ; i++) {
+        tabButton = tabButtons[i];
+        tabButton.setAttribute("onclick", "tabShow(\"" + tabButton.id + "\")");
+    }
+}
+
+function tabShow(tabId) {
+    // Show the correct tab
+    tabPages = document.getElementsByClassName("tab-page");
+    for (var i = 0 ; i < tabPages.length ; i++) {
+        tabPage = tabPages[i];
+        if(tabPage.id == tabId + "-page")
+            tabPage.style.display = "block";
+        else
+            tabPage.style.display = "none";
+    }
+
+    // Mark the active button
+    tabButtons = document.getElementsByClassName("tab-button");
+    for (var i = 0; i < tabButtons.length ; i++) {
+        tabButton = tabButtons[i];
+        if (tabButton.id == tabId)
+            tabButton.className += " active";
+        else 
+            tabButton.className = tabButton.className.replace(" active", "");
+    }
+} 
+
 </script>
 
 </head>
@@ -172,7 +253,20 @@ function databasePreprocess() {
 <!--------------------------------------------------------------------------->
 <body>
 
-    <table id="statistics"></table>
+    <div class="tab">
+        <button class="tab-button" id="tab-table">Table</button>
+        <button class="tab-button" id="tab-map">Map</button>
+        <button class="tab-button" id="tab-plot">Plot</button>
+    </div>
+    <div class="tab-page" id="tab-table-page">
+        <table id="table"></table>
+    </div>
+    <div class="tab-page" id="tab-map-page">
+        Map will show up here
+    </div>
+    <div class="tab-page" id="tab-plot-page">
+        Plot will show up here
+    </div>
 
 </body>
 
