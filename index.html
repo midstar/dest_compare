@@ -6,8 +6,19 @@
 
 <style>
 
-table, tr, th, td {
-    border: 1px solid black;
+table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    word-wrap: break-word;
+    text-align: left;
+    width: 100%;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 12px;
+}
+
+tr:nth-child(even) {
+    background-color: lightblue;
 }
 
 </style>
@@ -18,33 +29,57 @@ table, tr, th, td {
 keys = [
     "name",
     "altitude",
-    "vertical_drop"
+    "vertical_drop",
+    "piste_count",
+    "lift_count",
+    "chairlift_count",
+    "distance" // Will be caculated
 ];
 
 // Swedish language
 lang_swe = {
     "name" : "Namn",
     "altitude" : "Höjd över havet",
-    "vertical_drop" : "Fallhöjd"
+    "vertical_drop" : "Fallhöjd",
+    "piste_count" : "Antal nedfarter",
+    "lift_count" : "Antal liftar",
+    "chairlift_count" : "Antal stolsliftar",
+    "distance" : "Avstånd (km)"
 };
-
-lang = lang_swe;
 
 // Name must be unique, will be used as key in references
 database = [
     {
         "name" : "Stöten",
         "altitude" : 948,
-        "vertical_drop" : 370
+        "vertical_drop" : 370,
+        "piste_count" : 47,
+        "lift_count" : 21,
+        "chairlift_count" : 2,
+        "latitude" : 61.274824447454634, 
+        "longitude" : 12.898966698853474
     },
     {
         "name" : "Björnrike",
         "altitude" : 950,
-        "vertical_drop" : 470
+        "vertical_drop" : 470,
+        "piste_count" : 16,
+        "lift_count" : 12,
+        "chairlift_count" : 1,
+        "latitude" : 62.4228664877963, 
+        "longitude" : 13.957621303714978
     }
 ];
 
+config = {
+    "lang" : lang_swe,
+    "latitude" : 59.41152274059428, 
+    "longitude" : 17.81181064711004
+};
+
 window.onload = function() {
+    databasePreprocess();
+
     updateTable("name", true);
 };
 
@@ -59,41 +94,76 @@ function updateTable(keyToSort, ascending) {
     for (var i = 0 ; i < keys.length ; i++) {
         var cell_head = document.createElement("th");
         var symbol = "";
+        var clickAscending = "true";
         if (keys[i] == keyToSort) {
             if (ascending) {
                 symbol = " &#8595;";
-                cell_head.setAttribute("onclick", "updateTable(\"" + keys[i] + "\", false)");
+                clickAscending = "false";
             } else {
                 symbol = " &#8593;";
-                cell_head.setAttribute("onclick", "updateTable(\"" + keys[i] + "\", true)");
             }
-        } else {
-            cell_head.setAttribute("onclick", "updateTable(\"" + keys[i] + "\", true)");
         }
-        cell_head.innerHTML = lang[keys[i]] + symbol;
+        cell_head.setAttribute("onclick", "updateTable(\"" + keys[i] + "\", " + clickAscending + ")");
+        cell_head.innerHTML = config["lang"][keys[i]] + symbol;
         row_head.appendChild(cell_head);
     }
     table.appendChild(row_head);
 
     // Sort database
     database.sort(function(a, b) {
+        var aBeforeB = true;
         if (ascending)
-            return a[keyToSort] > b[keyToSort];
-        return a[keyToSort] < b[keyToSort];
+            aBeforeB = a[keyToSort] < b[keyToSort];
+        else
+            aBeforeB = a[keyToSort] > b[keyToSort];
+        if (aBeforeB)
+            return -1;
+        return 1;
     });
 
-
     // Generate data (td)
-    /*
     for (var i = 0; i < database.length ; i++) {
         elem = database[i];
         var row = document.createElement("tr");
-        for (var i = 0 ; i < keys.length ; i++) {
+        for (var j = 0 ; j < keys.length ; j++) {
             var cell = document.createElement("td");
-
+            cell.innerHTML = elem[keys[j]];
+            row.appendChild(cell);
         }
-    }*/
-}   
+        table.appendChild(row);
+    }
+} 
+
+// Calculate distance between two coordinates using the
+// haversine formula. Returns distance in km.
+function calcDist(lat1, lon1, lat2, lon2) {
+    const R = 6371e3; // metres
+    var φ1 = lat1 * Math.PI/180; // φ, λ in radians
+    var φ2 = lat2 * Math.PI/180;
+    var Δφ = (lat2-lat1) * Math.PI/180;
+    var Δλ = (lon2-lon1) * Math.PI/180;
+
+    var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ/2) * Math.sin(Δλ/2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+    var d = R * c; // in metres
+
+    return Math.round(d / 1000);
+}
+
+// Adds keys in the database that are calculated
+function databasePreprocess() {
+    for (var i = 0; i < database.length ; i++) {
+        elem = database[i];
+
+        // Calculated distance from "home"
+        elem["distance"] = calcDist(
+            elem["latitude"],   elem["longitude"],
+            config["latitude"], config["longitude"]);
+    }    
+}
 
 </script>
 
