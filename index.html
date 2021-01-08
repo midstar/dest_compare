@@ -9,7 +9,7 @@
 /****************************************************************************/
 /* Table style */
 
-table {
+#tab-table-page table {
     border-collapse: collapse;
     table-layout: fixed;
     word-wrap: break-word;
@@ -20,7 +20,7 @@ table {
     font-size: 12px;
 }
 
-tr:nth-child(even) {
+#tab-table-page tr:nth-child(even) {
     background-color: lightblue;
 }
 
@@ -71,6 +71,22 @@ tr:nth-child(even) {
   border-top: none;
 }
 
+/****************************************************************************/
+/* Settings style */
+
+.settings-title {
+    font-weight: bold;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 20px;
+}
+
+#settings-location-lat, #settings-location-lon {
+    width: 180px;
+}
+
+
+
 </style>
 
 <script>
@@ -95,6 +111,7 @@ keys = [
 
 // Swedish language
 lang_swe = {
+    // Part 1 - Localization of database keys
     "name" : "Namn",
     "altitude" : "Höjd över havet",
     "vertical_drop" : "Fallhöjd",
@@ -109,9 +126,17 @@ lang_swe = {
     "lift_count@surface" : "Antal släpliftar",
     "lift_count@gondola" : "Antal berg, kabin eller gondolliftar",
     "distance" : "Avstånd (km)",
-    "tab-table" : "Tabell",
-    "tab-map" : "Karta",
-    "tab-plot" : "Diagram"
+
+    // Part 2 - Localication of HTML tags (based on ID)
+    "html-tag-id" : {
+        "tab-table" : "Tabell",
+        "tab-map" : "Karta",
+        "tab-plot" : "Diagram",
+        "settings-location-title" : "Min plats",
+        "settings-location-lat-label" : "Latitud",
+        "settings-location-lon-label" : "Longitud",
+        "settings-location-fetch" : "Hämta min position"
+    }
 };
 
 // Name must be unique, will be used as key in references
@@ -228,13 +253,98 @@ config = {
     "longitude" : 17.81181064711004
 };
 
+
+
+//////////////////////////////////////////////////////////////////////////////
+// Misc
+
 window.onload = function() {
+    localize();
+
     tabSetup("tab-table");
 
     databasePreprocess();
 
     updateTable("name", true);
+
+    settingsSetup();
 };
+
+// Update localization for HTML tags
+function localize() {
+    for (var id in config["lang"]["html-tag-id"])
+        document.getElementById(id).innerHTML = config["lang"]["html-tag-id"][id];
+}
+
+// Calculate distance between two coordinates using the
+// haversine formula. Returns distance in km.
+function calcDist(lat1, lon1, lat2, lon2) {
+    const R = 6371e3; // metres
+    var φ1 = lat1 * Math.PI/180; // φ, λ in radians
+    var φ2 = lat2 * Math.PI/180;
+    var Δφ = (lat2-lat1) * Math.PI/180;
+    var Δλ = (lon2-lon1) * Math.PI/180;
+
+    var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ/2) * Math.sin(Δλ/2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+    var d = R * c; // in metres
+
+    return Math.round(d / 1000);
+}
+
+// Adds keys in the database that are calculated
+function databasePreprocess() {
+    for (var i = 0; i < database.length ; i++) {
+        elem = database[i];
+
+        // Calculated distance from "home"
+        elem["distance"] = calcDist(
+            elem["latitude"],   elem["longitude"],
+            config["latitude"], config["longitude"]);
+    }    
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+// TAB page general handling
+
+function tabSetup(defaultTabPageId) {
+    tabShow(defaultTabPageId);
+
+    tabButtons = document.getElementsByClassName("tab-button");
+    for (var i = 0; i < tabButtons.length ; i++) {
+        tabButton = tabButtons[i];
+        tabButton.setAttribute("onclick", "tabShow(\"" + tabButton.id + "\")");
+    }
+}
+
+function tabShow(tabId) {
+    // Show the correct tab
+    tabPages = document.getElementsByClassName("tab-page");
+    for (var i = 0 ; i < tabPages.length ; i++) {
+        tabPage = tabPages[i];
+        if(tabPage.id == tabId + "-page")
+            tabPage.style.display = "block";
+        else
+            tabPage.style.display = "none";
+    }
+
+    // Mark the active button
+    tabButtons = document.getElementsByClassName("tab-button");
+    for (var i = 0; i < tabButtons.length ; i++) {
+        tabButton = tabButtons[i];
+        if (tabButton.id == tabId)
+            tabButton.className += " active";
+        else 
+            tabButton.className = tabButton.className.replace(" active", "");
+    }
+} 
+
+//////////////////////////////////////////////////////////////////////////////
+// Table page
 
 function updateTable(keyToSort, ascending) {
     var table = document.getElementById("table");
@@ -287,74 +397,47 @@ function updateTable(keyToSort, ascending) {
     }
 } 
 
-// Calculate distance between two coordinates using the
-// haversine formula. Returns distance in km.
-function calcDist(lat1, lon1, lat2, lon2) {
-    const R = 6371e3; // metres
-    var φ1 = lat1 * Math.PI/180; // φ, λ in radians
-    var φ2 = lat2 * Math.PI/180;
-    var Δφ = (lat2-lat1) * Math.PI/180;
-    var Δλ = (lon2-lon1) * Math.PI/180;
-
-    var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-            Math.cos(φ1) * Math.cos(φ2) *
-            Math.sin(Δλ/2) * Math.sin(Δλ/2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
-    var d = R * c; // in metres
-
-    return Math.round(d / 1000);
-}
-
-// Adds keys in the database that are calculated
-function databasePreprocess() {
-    for (var i = 0; i < database.length ; i++) {
-        elem = database[i];
-
-        // Calculated distance from "home"
-        elem["distance"] = calcDist(
-            elem["latitude"],   elem["longitude"],
-            config["latitude"], config["longitude"]);
-    }    
-}
-
-
 //////////////////////////////////////////////////////////////////////////////
-// TAB page handling
+// Settings page
 
-function tabSetup(defaultTabPageId) {
-    tabShow(defaultTabPageId);
+function settingsSetup() {
+    var elemLat = document.getElementById("settings-location-lat");
+    var elemLon = document.getElementById("settings-location-lon");
+    elemLat.value = config["latitude"];
+    elemLon.value = config["longitude"];
 
-    tabButtons = document.getElementsByClassName("tab-button");
-    for (var i = 0; i < tabButtons.length ; i++) {
-        tabButton = tabButtons[i];
-        if (tabButton.id in config["lang"])
-            tabButton.innerHTML = config["lang"][tabButton.id]; 
-        tabButton.setAttribute("onclick", "tabShow(\"" + tabButton.id + "\")");
+    if (!navigator.geolocation) {
+        document.getElementById("settings-location-fetch").disabled = true;
     }
 }
 
-function tabShow(tabId) {
-    // Show the correct tab
-    tabPages = document.getElementsByClassName("tab-page");
-    for (var i = 0 ; i < tabPages.length ; i++) {
-        tabPage = tabPages[i];
-        if(tabPage.id == tabId + "-page")
-            tabPage.style.display = "block";
-        else
-            tabPage.style.display = "none";
-    }
+// Adjusts according to input min and max (handled as float)
+function adjustInputNumber(inputId) {
+    var elemInput = document.getElementById(inputId);
+    var value = parseFloat(elemInput.value);
+    if (value < elemInput.min || value > elemInput.max || isNaN(value))
+        elemInput.value = 0;
+    else
+        elemInput.value = value;
+}
 
-    // Mark the active button
-    tabButtons = document.getElementsByClassName("tab-button");
-    for (var i = 0; i < tabButtons.length ; i++) {
-        tabButton = tabButtons[i];
-        if (tabButton.id == tabId)
-            tabButton.className += " active";
-        else 
-            tabButton.className = tabButton.className.replace(" active", "");
+function updateLatLon() {
+    adjustInputNumber("settings-location-lat");
+    adjustInputNumber("settings-location-lon");
+}
+
+function fetchLatLon() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(pos) {
+            document.getElementById("settings-location-lat").value = pos.coords.latitude;
+            document.getElementById("settings-location-lon").value = pos.coords.longitude;
+        });
     }
-} 
+}
+
+
+
+
 
 </script>
 
@@ -369,17 +452,42 @@ function tabShow(tabId) {
         <button class="tab-button" id="tab-plot">Plot</button>
         <button class="tab-button" id="tab-settings">&#9881;</button>
     </div>
+
+    <!----------------------------------------------------------------------------------->
+    <!-- Table TAB -->
     <div class="tab-page" id="tab-table-page">
         <table id="table"></table>
     </div>
+
+    <!----------------------------------------------------------------------------------->
+    <!-- Map TAB -->
     <div class="tab-page" id="tab-map-page">
         Map will show up here
     </div>
+
+    <!----------------------------------------------------------------------------------->
+    <!-- Plot TAB -->
     <div class="tab-page" id="tab-plot-page">
         Plot will show up here
     </div>
+
+    <!----------------------------------------------------------------------------------->
+    <!-- Settings TAB -->
     <div class="tab-page" id="tab-settings-page">
-        Settings will show up here
+        <div class="settings-group">
+            <div class="settings-title" id="settings-location-title">My location</div>
+            <table>
+                <tr>
+                    <td id="settings-location-lat-label">Latitude</td>
+                    <td><input type="number" min="-90" max="90" id="settings-location-lat" onchange="updateLatLon()"></input></td>
+                </tr>
+                <tr>
+                    <td id="settings-location-lon-label">Longitude</td>
+                    <td><input type="number" min="-180" max="180" id="settings-location-lon" onchange="updateLatLon()"></input></td>
+                </tr>
+            <table>
+            <button id="settings-location-fetch" onclick="fetchLatLon()">Fetch my position</button>
+        </div>
     </div>
 
 </body>
