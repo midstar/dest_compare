@@ -251,7 +251,9 @@ config = {
     "lang" : lang_swe,
     "latitude" : 59.41152274059428, 
     "longitude" : 17.81181064711004,
-    "selected_tab" : "tab-table"
+    "selected_tab" : "tab-table",
+    "selected_key" : "name",
+    "sort_ascending" : true
 };
 
 
@@ -268,7 +270,7 @@ window.onload = function() {
 
     databasePreprocess();
 
-    updateTable("name", true);
+    updateTable(config["selected_tab"], config["sort_ascending"]);
 
     settingsSetup();
 };
