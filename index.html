@@ -250,7 +250,8 @@ database = [
 config = {
     "lang" : lang_swe,
     "latitude" : 59.41152274059428, 
-    "longitude" : 17.81181064711004
+    "longitude" : 17.81181064711004,
+    "selected_tab" : "tab-table"
 };
 
 
@@ -259,9 +260,11 @@ config = {
 // Misc
 
 window.onload = function() {
+    configSetup();
+
     localize();
 
-    tabSetup("tab-table");
+    tabSetup(config["selected_tab"]);
 
     databasePreprocess();
 
@@ -341,6 +344,9 @@ function tabShow(tabId) {
         else 
             tabButton.className = tabButton.className.replace(" active", "");
     }
+
+    // Remeber the selected tab
+    configSetSelectedTab(tabId);
 } 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -403,12 +409,14 @@ function updateTable(keyToSort, ascending) {
 function settingsSetup() {
     var elemLat = document.getElementById("settings-location-lat");
     var elemLon = document.getElementById("settings-location-lon");
+
     elemLat.value = config["latitude"];
     elemLon.value = config["longitude"];
 
     if (!navigator.geolocation) {
         document.getElementById("settings-location-fetch").disabled = true;
     }
+
 }
 
 // Adjusts according to input min and max (handled as float)
@@ -419,11 +427,13 @@ function adjustInputNumber(inputId) {
         elemInput.value = 0;
     else
         elemInput.value = value;
+    return elemInput.value;
 }
 
 function updateLatLon() {
-    adjustInputNumber("settings-location-lat");
-    adjustInputNumber("settings-location-lon");
+    const lat = adjustInputNumber("settings-location-lat");
+    const lon = adjustInputNumber("settings-location-lon");
+    configSetLatLon(lat, lon);
 }
 
 function fetchLatLon() {
@@ -431,9 +441,46 @@ function fetchLatLon() {
         navigator.geolocation.getCurrentPosition(function(pos) {
             document.getElementById("settings-location-lat").value = pos.coords.latitude;
             document.getElementById("settings-location-lon").value = pos.coords.longitude;
+            updateLatLon();
         });
     }
 }
+
+//////////////////////////////////////////////////////////////////////////////
+// Configuration handling - URL search parameters
+
+// Overides default configuration based on URL search parameters
+function configSetup() {
+    const params = new URLSearchParams(window.location.search);
+
+    // Latitude / Longitude
+    if (params.has("lat") && params.has("lon")) {
+        config["latitude"] = parseFloat(params.get("lat"));
+        config["longitude"] = parseFloat(params.get("lon"));
+    } else 
+        fetchLatLon();
+    
+    // Selected tab
+    if (params.has("selected_tab"))
+        config["selected_tab"] = params.get("selected_tab");
+}
+
+// Will reload page
+function configSetLatLon(lat, lon) {
+    const params = new URLSearchParams(window.location.search);
+    params.set("lat", lat);
+    params.set("lon", lon);
+    window.location.search = params.toString(); // Will reload page
+}
+
+function configSetSelectedTab(selectedTab) {
+    const params = new URLSearchParams(window.location.search);
+    params.set("selected_tab", selectedTab);
+    // Replace history
+    history.replaceState({},selectedTab,"?" + params.toString());
+}
+
+
 
 
 
