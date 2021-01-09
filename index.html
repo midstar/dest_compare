@@ -251,9 +251,9 @@ config = {
     "lang" : lang_swe,
     "latitude" : 59.41152274059428, 
     "longitude" : 17.81181064711004,
-    "selected_tab" : "tab-table",
-    "selected_key" : "name",
-    "sort_ascending" : true
+    "tab_selected" : "tab-table",
+    "table_selected" : "name",
+    "table_ascending" : true
 };
 
 
@@ -266,11 +266,11 @@ window.onload = function() {
 
     localize();
 
-    tabSetup(config["selected_tab"]);
+    tabSetup(config["tab_selected"]);
 
     databasePreprocess();
 
-    updateTable(config["selected_tab"], config["sort_ascending"]);
+    updateTable(config["table_selected"], config["table_ascending"]);
 
     settingsSetup();
 };
@@ -354,7 +354,9 @@ function tabShow(tabId) {
 //////////////////////////////////////////////////////////////////////////////
 // Table page
 
-function updateTable(keyToSort, ascending) {
+function updateTable(selected, ascending) {
+    configSetTableSelSort(selected, ascending);
+
     var table = document.getElementById("table");
 
     // Delete old elements
@@ -366,7 +368,7 @@ function updateTable(keyToSort, ascending) {
         var cell_head = document.createElement("th");
         var symbol = "";
         var clickAscending = "true";
-        if (keys[i] == keyToSort) {
+        if (keys[i] == selected) {
             if (ascending) {
                 symbol = " &#8595;";
                 clickAscending = "false";
@@ -384,9 +386,9 @@ function updateTable(keyToSort, ascending) {
     database.sort(function(a, b) {
         var aBeforeB = true;
         if (ascending)
-            aBeforeB = a[keyToSort] < b[keyToSort];
+            aBeforeB = a[selected] < b[selected];
         else
-            aBeforeB = a[keyToSort] > b[keyToSort];
+            aBeforeB = a[selected] > b[selected];
         if (aBeforeB)
             return -1;
         return 1;
@@ -463,8 +465,17 @@ function configSetup() {
         fetchLatLon();
     
     // Selected tab
-    if (params.has("selected_tab"))
-        config["selected_tab"] = params.get("selected_tab");
+    if (params.has("tab_selected"))
+        config["tab_selected"] = params.get("tab_selected");
+
+    // Table selected 
+    if (params.has("table_selected"))
+        config["table_selected"] = params.get("table_selected");
+
+    // Table sort 
+    if (params.has("table_ascending"))
+        config["table_ascending"] = params.get("table_ascending") == "true";
+
 }
 
 // Will reload page
@@ -477,9 +488,17 @@ function configSetLatLon(lat, lon) {
 
 function configSetSelectedTab(selectedTab) {
     const params = new URLSearchParams(window.location.search);
-    params.set("selected_tab", selectedTab);
+    params.set("tab_selected", selectedTab);
     // Replace history
     history.replaceState({},selectedTab,"?" + params.toString());
+}
+
+function configSetTableSelSort(selected, ascending) {
+    const params = new URLSearchParams(window.location.search);
+    params.set("table_selected", selected);
+    params.set("table_ascending", ascending);
+    // Replace history
+    history.replaceState({},selected+ascending,"?" + params.toString());    
 }
 
 
