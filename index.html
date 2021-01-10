@@ -3,27 +3,10 @@
 <!--------------------------------------------------------------------------->
 <head>
 <title>Sweski</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/css/ol.css" type="text/css">
+<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
 
 <style>
-
-/****************************************************************************/
-/* Table style */
-
-#tab-table-page table {
-    border-collapse: collapse;
-    table-layout: fixed;
-    word-wrap: break-word;
-    text-align: left;
-    width: 100%;
-    margin-left: 5px;
-    margin-right: 5px;
-    font-size: 12px;
-}
-
-#tab-table-page tr:nth-child(even) {
-    background-color: lightblue;
-}
-
 
 /****************************************************************************/
 /* TAB style */
@@ -69,6 +52,31 @@
   padding: 6px 12px;
   border: 1px solid #ccc;
   border-top: none;
+}
+
+/****************************************************************************/
+/* Table style */
+
+#tab-table-page table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    word-wrap: break-word;
+    text-align: left;
+    width: 100%;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 12px;
+}
+
+#tab-table-page tr:nth-child(even) {
+    background-color: lightblue;
+}
+
+/****************************************************************************/
+/* Map style */
+
+#map {
+    height: 100%;
 }
 
 /****************************************************************************/
@@ -251,6 +259,7 @@ config = {
     "lang" : lang_swe,
     "latitude" : 59.41152274059428, 
     "longitude" : 17.81181064711004,
+    "map-zoom" : 5.5,
     "tab_selected" : "tab-table",
     "table_selected" : "name",
     "table_ascending" : true
@@ -271,6 +280,8 @@ window.onload = function() {
     databasePreprocess();
 
     updateTable(config["table_selected"], config["table_ascending"]);
+
+    mapSetup();
 
     settingsSetup();
 };
@@ -408,6 +419,40 @@ function updateTable(selected, ascending) {
 } 
 
 //////////////////////////////////////////////////////////////////////////////
+// Map page
+
+function mapSetup() {
+    var map = new ol.Map({
+        target: 'map',
+        layers: [
+            new ol.layer.Tile({
+            source: new ol.source.OSM()
+            })
+        ],
+        view: new ol.View({
+            center: ol.proj.fromLonLat([config["longitude"], config["latitude"]]),
+            zoom: config["map-zoom"]
+        })
+    });
+
+    var layer = new ol.layer.Vector({
+        source: new ol.source.Vector({
+            features: [
+                new ol.Feature({
+                    geometry: new ol.geom.Point(ol.proj.fromLonLat([config["longitude"], config["latitude"]]))
+                })
+            ]
+        })/*,
+        style: new ol.style.Style({
+            fillColor: "#008000",
+            strokeColor: "#000000",
+            strokeWidth: 2
+        })*/
+    });
+    map.addLayer(layer);
+}
+
+//////////////////////////////////////////////////////////////////////////////
 // Settings page
 
 function settingsSetup() {
@@ -530,7 +575,7 @@ function configSetTableSelSort(selected, ascending) {
     <!----------------------------------------------------------------------------------->
     <!-- Map TAB -->
     <div class="tab-page" id="tab-map-page">
-        Map will show up here
+        <div id="map" class="map"></div>
     </div>
 
     <!----------------------------------------------------------------------------------->
