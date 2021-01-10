@@ -442,13 +442,16 @@ function mapSetup() {
                     geometry: new ol.geom.Point(ol.proj.fromLonLat([config["longitude"], config["latitude"]]))
                 })
             ]
-        })/*,
-        style: new ol.style.Style({
-            fillColor: "#008000",
-            strokeColor: "#000000",
-            strokeWidth: 2
-        })*/
+        }),
+        style: new ol.style.Style({ 
+            image: new ol.style.Circle({ 
+                radius: 5, 
+                fill: new ol.style.Fill({color: 'rgba(200, 200, 255, 0.3)'}), 
+                stroke: new ol.style.Stroke({color: 'red', width: 3}) 
+            }) 
+        })
     });
+
     map.addLayer(layer);
 }
 
