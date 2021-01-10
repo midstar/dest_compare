@@ -440,8 +440,11 @@ function mapSetup() {
             features: [
                 new ol.Feature({
                     geometry: new ol.geom.Point(ol.proj.fromLonLat([config["longitude"], config["latitude"]]))
+                }),
+                new ol.Feature({
+                    geometry: new ol.geom.Point(ol.proj.fromLonLat([14.420865478788754, 60.141722083259154]))
                 })
-            ]
+            ] 
         }),
         style: new ol.style.Style({ 
             image: new ol.style.Circle({ 
