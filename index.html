@@ -525,7 +525,22 @@ function mapSetup() {
         } else {
             overlay.setPosition(undefined);
         }
- });
+    });
+
+    // Handle mouse over on any of the markers
+    map.on('pointermove', function (event) {
+        var feature = map.forEachFeatureAtPixel(event.pixel,
+                        function(feature) {
+                            return feature;
+                        });
+        if (feature) {
+            updatePopup(popup, feature.get("databaseIndex"));
+            var coordinate = event.coordinate;
+            overlay.setPosition(coordinate);
+        } else {
+            overlay.setPosition(undefined);
+        }
+    });
 }
 
 function updatePopup(popup, databaseIndex) {
