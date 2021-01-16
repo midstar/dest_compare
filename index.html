@@ -83,6 +83,7 @@
     background-color: white;
     border: 1px solid black;
     border-radius: 5px;
+    font-size: 12px;
 }
 
 /****************************************************************************/
@@ -524,7 +525,11 @@ function mapSetup() {
 }
 
 function updatePopup(popup, databaseIndex) {
-    popup.innerHTML = '<b>Hello world!</b><br />I am a popup.:' + databaseIndex;
+    if (databaseIndex == -1) {
+        popup.innerHTML = config["lang"]["html-tag-id"]["settings-location-title"];
+    } else {
+        popup.innerHTML = database[databaseIndex]['name'];
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////
