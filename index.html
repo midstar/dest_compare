@@ -407,7 +407,7 @@ function updateTable(selected, ascending) {
 
     // Generate data (td)
     for (var i = 0; i < database.length ; i++) {
-        elem = database[i];
+        var elem = database[i];
         var row = document.createElement("tr");
         for (var j = 0 ; j < keys.length ; j++) {
             var cell = document.createElement("td");
@@ -422,6 +422,8 @@ function updateTable(selected, ascending) {
 // Map page
 
 function mapSetup() {
+
+    // Create the map
     var map = new ol.Map({
         target: 'map',
         layers: [
@@ -435,6 +437,7 @@ function mapSetup() {
         })
     });
 
+    // Create the style of the home marker
     var styleRed = new ol.style.Style({ 
             image: new ol.style.Circle({ 
                 radius: 5, 
@@ -443,7 +446,7 @@ function mapSetup() {
             }) 
         });
 
-
+    // Create the style of the non-home markers
     var styleBlue = new ol.style.Style({ 
         image: new ol.style.Circle({ 
             radius: 5, 
@@ -452,24 +455,39 @@ function mapSetup() {
         }) 
     });
 
-    var homePoint = new ol.Feature({
-                    geometry: new ol.geom.Point(ol.proj.fromLonLat([config["longitude"], config["latitude"]]))
-                });
-    var anotherPoint = new ol.Feature({
-                    geometry: new ol.geom.Point(ol.proj.fromLonLat([14.420865478788754, 60.141722083259154]))
-                });
+    // Create the home marker
+    var markers = [];
+    var homeMarker = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([
+            config["longitude"], 
+            config["latitude"]]
+        ))
+    });
+    homeMarker.setStyle(styleRed);
+    markers.push(homeMarker);
 
-    homePoint.setStyle(styleRed);
-    anotherPoint.setStyle(styleBlue);
+    // Create the other markers
+    for (var i = 0; i < database.length ; i++) {
+        var elem = database[i];
+        var marker = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([
+                    elem["longitude"], 
+                    elem["latitude"]]
+            )),
+        });
+        marker.setStyle(styleBlue);
+        markers.push(marker);
+    }
 
+    // Create the layer where all markers are located and add to map
     var layer = new ol.layer.Vector({
         source: new ol.source.Vector({
-            features: [homePoint,anotherPoint] 
-        })/*,
-        style: styleRed*/
+            features: markers 
+        })
     });
-
     map.addLayer(layer);
+
+    
 
     var container = document.getElementById('popup');
     var content = document.getElementById('popup-content');
