@@ -86,6 +86,10 @@
     font-size: 12px;
 }
 
+#popup table {
+    font-size: 12px;
+}
+
 /****************************************************************************/
 /* Settings style */
 
@@ -528,7 +532,25 @@ function updatePopup(popup, databaseIndex) {
     if (databaseIndex == -1) {
         popup.innerHTML = config["lang"]["html-tag-id"]["settings-location-title"];
     } else {
-        popup.innerHTML = database[databaseIndex]['name'];
+        // Delete old elements
+        popup.innerHTML = "";
+
+        // Create table
+        var table = document.createElement("table");
+        for (var i = 0 ; i < keys.length ; i++) {
+            var row = document.createElement("tr");
+
+            var cell_desc = document.createElement("td");
+            cell_desc.innerHTML = config["lang"][keys[i]];
+
+            var cell_value = document.createElement("td");
+            cell_value.innerHTML = database[databaseIndex][keys[i]];
+
+            row.appendChild(cell_desc);
+            row.appendChild(cell_value);
+            table.appendChild(row);
+        }
+        popup.appendChild(table);
     }
 }
 
