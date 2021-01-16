@@ -33,7 +33,7 @@
 #tab-settings {
     float: right;
     font-size: 27px;
-    padding: 2px 16px 5px;
+    padding: 6px 16px 5px;
 }
 
 /* Change background color of buttons on hover */
@@ -77,6 +77,12 @@
 
 #map {
     height: 100%;
+}
+
+#popup {
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
 }
 
 /****************************************************************************/
@@ -461,7 +467,8 @@ function mapSetup() {
         geometry: new ol.geom.Point(ol.proj.fromLonLat([
             config["longitude"], 
             config["latitude"]]
-        ))
+        )),
+        databaseIndex: -1 // Custom property
     });
     homeMarker.setStyle(styleRed);
     markers.push(homeMarker);
@@ -474,6 +481,7 @@ function mapSetup() {
                     elem["longitude"], 
                     elem["latitude"]]
             )),
+            databaseIndex: i // Custom property
         });
         marker.setStyle(styleBlue);
         markers.push(marker);
@@ -487,14 +495,11 @@ function mapSetup() {
     });
     map.addLayer(layer);
 
-    
-
-    var container = document.getElementById('popup');
-    var content = document.getElementById('popup-content');
-    var closer = document.getElementById('popup-closer');
+    // Create the popup
+    var popup = document.getElementById('popup');
 
     var overlay = new ol.Overlay({
-        element: container,
+        element: popup,
         autoPan: true,
         autoPanAnimation: {
             duration: 250
@@ -502,23 +507,24 @@ function mapSetup() {
     });
     map.addOverlay(overlay);
 
-    closer.onclick = function() {
-        overlay.setPosition(undefined);
-        closer.blur();
-        return false;
-    };
-
+    // Handle click on any of the markers
     map.on('singleclick', function (event) {
-     if (map.hasFeatureAtPixel(event.pixel) === true) {
-         var coordinate = event.coordinate;
-
-         content.innerHTML = '<b>Hello world!</b><br />I am a popup.';
-         overlay.setPosition(coordinate);
-     } else {
-         overlay.setPosition(undefined);
-         closer.blur();
-     }
+        var feature = map.forEachFeatureAtPixel(event.pixel,
+                        function(feature) {
+                            return feature;
+                        });
+        if (feature) {
+            updatePopup(popup, feature.get("databaseIndex"));
+            var coordinate = event.coordinate;
+            overlay.setPosition(coordinate);
+        } else {
+            overlay.setPosition(undefined);
+        }
  });
+}
+
+function updatePopup(popup, databaseIndex) {
+    popup.innerHTML = '<b>Hello world!</b><br />I am a popup.:' + databaseIndex;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -645,8 +651,7 @@ function configSetTableSelSort(selected, ascending) {
     <!-- Map TAB -->
     <div class="tab-page" id="tab-map-page">
         <div id="map" class="map"></div>
-        <div id="popup" class="ol-popup">
-            <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+        <div id="popup">
             <div id="popup-content"></div>
         </div>
     </div>
