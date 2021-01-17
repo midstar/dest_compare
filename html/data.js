@@ -197,10 +197,12 @@ database = [
     */
 ];
 
+// Most of these configurations can be changed
+// by the client by URL parameters
 config = {
     "lang" : "Svenska",
-    "latitude" : 59.41152274059428, 
-    "longitude" : 17.81181064711004,
+    "latitude" : 59.32679732636055, 
+    "longitude" : 18.07172903837957,
     "map-zoom" : 5.5,
     "tab_selected" : "tab-table",
     "table_selected" : "name",
