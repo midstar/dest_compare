@@ -16,34 +16,76 @@ keys = [
     "distance" // Will be calculated
 ];
 
-// Swedish language
-lang_swe = {
-    // Part 1 - Localization of database keys
-    "name" : "Namn",
-    "altitude" : "Höjd över havet",
-    "vertical_drop" : "Fallhöjd",
-    "piste_count" : "Antal nedfarter",
-    "piste_count@green" : "Antal gröna nedfarter",
-    "piste_count@blue" : "Antal blå nedfarter",
-    "piste_count@red" : "Antal röda nedfarter",
-    "piste_count@black" : "Antal svarta nedfarter",
-    "piste_longest" : "Längsta nedfart",
-    "lift_count" : "Antal liftar",
-    "lift_count@chair" : "Antal stolsliftar",
-    "lift_count@surface" : "Antal släpliftar",
-    "lift_count@gondola" : "Antal berg, kabin eller gondolliftar",
-    "distance" : "Avstånd (km)",
+// Language translations
+language = {
+    // Swedish language
+    "English" : {
 
-    // Part 2 - Localication of HTML tags (based on ID)
-    "html-tag-id" : {
-        "tab-table" : "Tabell",
-        "tab-map" : "Karta",
-        "tab-plot" : "Diagram",
-        "settings-location-title" : "Min plats",
-        "settings-location-lat-label" : "Latitud",
-        "settings-location-lon-label" : "Longitud",
-        "settings-location-fetch" : "Hämta min position",
-        "settings-location-select-map" : "Välj på karta"
+        // Part 1 - Localication of HTML tags (based on ID)
+        // These are mandatory for all type of databases
+        "html-tag-id" : {
+            "tab-table" : "Table",
+            "tab-map" : "Map",
+            "tab-plot" : "Plot",
+            "settings-language-title" : "Language",
+            "settings-location-title" : "My location",
+            "settings-location-lat-label" : "Latitude",
+            "settings-location-lon-label" : "Longitude",
+            "settings-location-fetch" : "Fetch my position",
+            "settings-location-select-map" : "Select on map"
+        },
+
+        // Part 2 - Localization of database keys
+        // These depends on which keys you have defined in your database
+        "name" : "Name",
+        "altitude" : "Altitude",
+        "vertical_drop" : "Vertical drop",
+        "piste_count" : "Piste count",
+        "piste_count@green" : "Green piste count",
+        "piste_count@blue" : "Blue piste count",
+        "piste_count@red" : "Red piste count",
+        "piste_count@black" : "Black piste count",
+        "piste_longest" : "Longest piste",
+        "lift_count" : "Lift count",
+        "lift_count@chair" : "Chair lift count",
+        "lift_count@surface" : "Surface lift count",
+        "lift_count@gondola" : "Gondola lift count",
+        "distance" : "Distance (km)"
+    },
+
+    // Swedish language
+    "Svenska" : {
+
+        // Part 1 - Localication of HTML tags (based on ID)
+        // These are mandatory for all type of databases
+        "html-tag-id" : {
+            "tab-table" : "Tabell",
+            "tab-map" : "Karta",
+            "tab-plot" : "Diagram",
+            "settings-language-title" : "Språk",
+            "settings-location-title" : "Min plats",
+            "settings-location-lat-label" : "Latitud",
+            "settings-location-lon-label" : "Longitud",
+            "settings-location-fetch" : "Hämta min position",
+            "settings-location-select-map" : "Välj på karta"
+        },
+
+        // Part 2 - Localization of database keys
+        // These depends on which keys you have defined in your database
+        "name" : "Namn",
+        "altitude" : "Höjd över havet",
+        "vertical_drop" : "Fallhöjd",
+        "piste_count" : "Antal nedfarter",
+        "piste_count@green" : "Antal gröna nedfarter",
+        "piste_count@blue" : "Antal blå nedfarter",
+        "piste_count@red" : "Antal röda nedfarter",
+        "piste_count@black" : "Antal svarta nedfarter",
+        "piste_longest" : "Längsta nedfart",
+        "lift_count" : "Antal liftar",
+        "lift_count@chair" : "Antal stolsliftar",
+        "lift_count@surface" : "Antal släpliftar",
+        "lift_count@gondola" : "Antal berg, kabin eller gondolliftar",
+        "distance" : "Avstånd (km)"
     }
 };
 
@@ -156,7 +198,7 @@ database = [
 ];
 
 config = {
-    "lang" : lang_swe,
+    "lang" : "Svenska",
     "latitude" : 59.41152274059428, 
     "longitude" : 17.81181064711004,
     "map-zoom" : 5.5,

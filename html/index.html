@@ -104,6 +104,10 @@
     width: 180px;
 }
 
+#tab-settings-page button {
+    margin-left: 5px;
+}
+
 
 
 </style>
@@ -131,8 +135,8 @@ window.onload = function() {
 
 // Update localization for HTML tags
 function localize() {
-    for (var id in config["lang"]["html-tag-id"])
-        document.getElementById(id).innerHTML = config["lang"]["html-tag-id"][id];
+    for (var id in language[config["lang"]]["html-tag-id"])
+        document.getElementById(id).innerHTML = language[config["lang"]]["html-tag-id"][id];
 }
 
 // Calculate distance between two coordinates using the
@@ -239,7 +243,7 @@ function updateTable(selected, ascending) {
             }
         }
         cell_head.setAttribute("onclick", "updateTable(\"" + keys[i] + "\", " + clickAscending + ")");
-        cell_head.innerHTML = config["lang"][keys[i]] + symbol;
+        cell_head.innerHTML = language[config["lang"]][keys[i]] + symbol;
         row_head.appendChild(cell_head);
     }
     table.appendChild(row_head);
@@ -394,7 +398,7 @@ function mapSetup() {
 
 function updatePopup(popup, databaseIndex) {
     if (databaseIndex == -1) {
-        popup.innerHTML = config["lang"]["html-tag-id"]["settings-location-title"];
+        popup.innerHTML = language[config["lang"]]["html-tag-id"]["settings-location-title"];
     } else {
         // Delete old elements
         popup.innerHTML = "";
@@ -405,7 +409,7 @@ function updatePopup(popup, databaseIndex) {
             var row = document.createElement("tr");
 
             var cell_desc = document.createElement("td");
-            cell_desc.innerHTML = config["lang"][keys[i]];
+            cell_desc.innerHTML = language[config["lang"]][keys[i]];
 
             var cell_value = document.createElement("td");
             cell_value.innerHTML = database[databaseIndex][keys[i]];
@@ -430,6 +434,18 @@ function refreshMap() {
 // Settings page
 
 function settingsSetup() {
+
+    // Language settings
+    var elemLangSel = document.getElementById("settings-language-select");
+    addLanguageOpt(config["lang"]); // Selected language first
+    for (lang in language) {
+        if (lang != config["lang"]) {
+            addLanguageOpt(lang);
+        }
+    }
+
+    // My localtion settings
+
     var elemLat = document.getElementById("settings-location-lat");
     var elemLon = document.getElementById("settings-location-lon");
 
@@ -440,6 +456,20 @@ function settingsSetup() {
         document.getElementById("settings-location-fetch").disabled = true;
     }
 
+}
+
+function addLanguageOpt(lang) {
+    var elemLangSel = document.getElementById("settings-language-select");
+    var elemOption = document.createElement("option");
+    elemOption.setAttribute("value", lang);
+    elemOption.innerHTML = lang;
+    elemLangSel.appendChild(elemOption);
+}
+
+function selectLang() {
+    var elemLangSel = document.getElementById("settings-language-select");
+    // Will reload page
+    configLanguage(elemLangSel.value);
 }
 
 // Adjusts according to input min and max (handled as float)
@@ -481,6 +511,11 @@ function selectLatLonMap() {
 function configSetup() {
     const params = new URLSearchParams(window.location.search);
 
+    // Language
+    if (params.has("lang")) {
+        config["lang"] = params.get("lang");
+    }
+
     // Latitude / Longitude
     if (params.has("lat") && params.has("lon")) {
         config["latitude"] = parseFloat(params.get("lat"));
@@ -500,6 +535,13 @@ function configSetup() {
     if (params.has("table_ascending"))
         config["table_ascending"] = params.get("table_ascending") == "true";
 
+}
+
+// Will reload page
+function configLanguage(lang) {
+    const params = new URLSearchParams(window.location.search);
+    params.set("lang", lang);
+    window.location.search = params.toString(); // Will reload page
 }
 
 // Will reload page
@@ -524,12 +566,6 @@ function configSetTableSelSort(selected, ascending) {
     // Replace history
     history.replaceState({},selected+ascending,"?" + params.toString());    
 }
-
-
-
-
-
-
 
 </script>
 
@@ -569,6 +605,12 @@ function configSetTableSelSort(selected, ascending) {
     <!----------------------------------------------------------------------------------->
     <!-- Settings TAB -->
     <div class="tab-page" id="tab-settings-page">
+        <div class="settings-group">
+            <div class="settings-title" id="settings-language-title">Language</div>
+            <select id="settings-language-select" onchange="selectLang()">
+            </select>
+        </div>
+        <hr>
         <div class="settings-group">
             <div class="settings-title" id="settings-location-title">My location</div>
             <table>
