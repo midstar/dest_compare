@@ -42,7 +42,8 @@ lang_swe = {
         "settings-location-title" : "Min plats",
         "settings-location-lat-label" : "Latitud",
         "settings-location-lon-label" : "Longitud",
-        "settings-location-fetch" : "Hämta min position"
+        "settings-location-fetch" : "Hämta min position",
+        "settings-location-select-map" : "Välj på karta"
     }
 };
 

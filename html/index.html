@@ -203,6 +203,14 @@ function tabShow(tabId) {
 
     // Remeber the selected tab
     configSetSelectedTab(tabId);
+
+    // Workaround for map not being displayed properly when when map div
+    // is hidden during setup
+    if (tabId == "tab-map") {
+        setTimeout(function() {
+            refreshMap();
+        }, 100);
+    }
 } 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -264,10 +272,13 @@ function updateTable(selected, ascending) {
 //////////////////////////////////////////////////////////////////////////////
 // Map page
 
+var map = undefined;
+var selectLatLong = false;
+
 function mapSetup() {
 
     // Create the map
-    var map = new ol.Map({
+    map = new ol.Map({
         target: 'map',
         layers: [
             new ol.layer.Tile({
@@ -346,16 +357,22 @@ function mapSetup() {
 
     // Handle click on any of the markers
     map.on('singleclick', function (event) {
-        var feature = map.forEachFeatureAtPixel(event.pixel,
-                        function(feature) {
-                            return feature;
-                        });
-        if (feature) {
-            updatePopup(popup, feature.get("databaseIndex"));
-            var coordinate = event.coordinate;
-            overlay.setPosition(coordinate);
+        if (selectLatLong) {
+            var lonLat = ol.proj.toLonLat(event.coordinate);
+            // Will reload page
+            configSetLatLon(lonLat[1], lonLat[0]);
         } else {
-            overlay.setPosition(undefined);
+            var feature = map.forEachFeatureAtPixel(event.pixel,
+                            function(feature) {
+                                return feature;
+                            });
+            if (feature) {
+                updatePopup(popup, feature.get("databaseIndex"));
+                var coordinate = event.coordinate;
+                overlay.setPosition(coordinate);
+            } else {
+                overlay.setPosition(undefined);
+            }
         }
     });
 
@@ -401,6 +418,14 @@ function updatePopup(popup, databaseIndex) {
     }
 }
 
+// This is a workaround for the map not being created correctly when the
+// map div is not visible during map setup
+function refreshMap() {
+    if (map != undefined) {
+        map.updateSize();
+    }
+}
+
 //////////////////////////////////////////////////////////////////////////////
 // Settings page
 
@@ -442,6 +467,11 @@ function fetchLatLon() {
             updateLatLon();
         });
     }
+}
+
+function selectLatLonMap() {
+    selectLatLong = true;
+    tabShow("tab-map");
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -552,6 +582,7 @@ function configSetTableSelSort(selected, ascending) {
                 </tr>
             <table>
             <button id="settings-location-fetch" onclick="fetchLatLon()">Fetch my position</button>
+            <button id="settings-location-select-map" onclick="selectLatLonMap()">Select on map</button>
         </div>
     </div>
 
