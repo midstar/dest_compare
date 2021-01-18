@@ -5,6 +5,8 @@
 <title>Sweski</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/css/ol.css" type="text/css">
 <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
+<link rel="stylesheet" href="chartist.min.css">
+<script src="chartist.min.js"></script>
 <script src="data.js"></script>
 <style>
 
@@ -127,6 +129,8 @@ window.onload = function() {
     databasePreprocess();
 
     updateTable(config["table_selected"], config["table_ascending"]);
+
+    plotSetup();
 
     mapSetup();
 
@@ -431,6 +435,44 @@ function refreshMap() {
 }
 
 //////////////////////////////////////////////////////////////////////////////
+// Plot page
+
+function plotSetup() {
+    // Extract labels and data series
+    var labels = [];
+    var series = []
+    for (var i = 0; i < database.length ; i++) {
+        var elem = database[i];
+        labels.push(elem['name']);
+        series.push(elem['vertical_drop']);
+    }
+
+
+    var data = {
+        // A labels array that can contain any sort of values
+        labels: labels,
+        // Our series array that contains series objects or in this case series data arrays
+        series: [
+            series
+        ]
+    };
+
+    var settings = {
+        seriesBarDistance: 10,
+        reverseData: true,
+        horizontalBars: true,
+        axisY: {
+            offset: 70
+        }
+    }
+
+    // Create a new line chart object where as first parameter we pass in a selector
+    // that is resolving to our chart container element. The Second parameter
+    // is the actual data object.
+    new Chartist.Bar('.ct-chart', data, settings);
+}
+
+//////////////////////////////////////////////////////////////////////////////
 // Settings page
 
 function settingsSetup() {
@@ -599,7 +641,7 @@ function configSetTableSelSort(selected, ascending) {
     <!----------------------------------------------------------------------------------->
     <!-- Plot TAB -->
     <div class="tab-page" id="tab-plot-page">
-        Plot will show up here
+        <div class="ct-chart ct-perfect-fourth"></div>
     </div>
 
     <!----------------------------------------------------------------------------------->
