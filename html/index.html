@@ -175,6 +175,35 @@ function databasePreprocess() {
     }    
 }
 
+// Performs
+// - Update sort configuration
+// - Resorts database
+// - Updates table
+// - Updates plot
+function updateSort(selected, ascending) {
+
+    // Update configuration
+    configSetSort(selected, ascending);
+
+    // Sort database
+    database.sort(function(a, b) {
+        var aBeforeB = true;
+        if (ascending)
+            aBeforeB = a[selected] < b[selected];
+        else
+            aBeforeB = a[selected] > b[selected];
+        if (aBeforeB)
+            return -1;
+        return 1;
+    }); 
+    
+    // Update table
+    tableUpdate();
+
+    // Update plot
+    plotUpdate();
+}
+
 
 //////////////////////////////////////////////////////////////////////////////
 // TAB page general handling
@@ -220,18 +249,20 @@ function tabShow(tabId) {
             mapRefresh();
         }, 100);
     }
-} 
+}
+
+
 
 //////////////////////////////////////////////////////////////////////////////
 // Table page
 
 function tableSetup() {
-    tableUpdate(config["sort_selected"], config["sort_ascending"])
+    tableUpdate();
 }
 
 function tableUpdate(selected, ascending) {
-    configSetSort(selected, ascending);
-
+    var selected = config["sort_selected"];
+    var ascending = config["sort_ascending"];
     var table = document.getElementById("table");
 
     // Delete old elements
@@ -251,23 +282,11 @@ function tableUpdate(selected, ascending) {
                 symbol = " &#8593;";
             }
         }
-        cell_head.setAttribute("onclick", "tableUpdate(\"" + keys[i] + "\", " + clickAscending + ")");
+        cell_head.setAttribute("onclick", "updateSort(\"" + keys[i] + "\", " + clickAscending + ")");
         cell_head.innerHTML = language[config["lang"]][keys[i]] + symbol;
         row_head.appendChild(cell_head);
     }
     table.appendChild(row_head);
-
-    // Sort database
-    database.sort(function(a, b) {
-        var aBeforeB = true;
-        if (ascending)
-            aBeforeB = a[selected] < b[selected];
-        else
-            aBeforeB = a[selected] > b[selected];
-        if (aBeforeB)
-            return -1;
-        return 1;
-    });
 
     // Generate data (td)
     for (var i = 0; i < database.length ; i++) {
@@ -443,6 +462,10 @@ function mapRefresh() {
 // Plot page
 
 function plotSetup() {
+    plotUpdate();
+}
+
+function plotUpdate() {
 
     // Fill the data select options
     plotAddDataSelOpt(config['plot_selected']); // Selected data first
