@@ -129,7 +129,7 @@ window.onload = function() {
 
     databasePreprocess();
 
-    tableUpdate(config["table_selected"], config["table_ascending"]);
+    tableSetup();
 
     plotSetup();
 
@@ -226,11 +226,11 @@ function tabShow(tabId) {
 // Table page
 
 function tableSetup() {
-    tableUpdate(config["table_selected"], config["table_ascending"])
+    tableUpdate(config["sort_selected"], config["sort_ascending"])
 }
 
 function tableUpdate(selected, ascending) {
-    configSetTableSelSort(selected, ascending);
+    configSetSort(selected, ascending);
 
     var table = document.getElementById("table");
 
@@ -443,12 +443,22 @@ function mapRefresh() {
 // Plot page
 
 function plotSetup() {
+
     // Fill the data select options
     plotAddDataSelOpt(config['plot_selected']); // Selected data first
     for (var i = 0 ; i < keys.length ; i++) {
         if (keys[i] != config['plot_label'] && 
             keys[i] != config['plot_selected']) {
             plotAddDataSelOpt(keys[i]);
+        }
+    }
+
+    
+    // Fill the data sort selection options
+    plotAddDataSortOpt(config['sort_selected']); // Selected data first
+    for (var i = 0 ; i < keys.length ; i++) {
+        if (keys[i] != config['sort_selected']) {
+            plotAddDataSortOpt(keys[i]);
         }
     }
     
@@ -470,7 +480,7 @@ function plotSetup() {
     };
 
     var options = {
-        seriesBarDistance: 500,
+        seriesBarDistance: 5,
         reverseData: true,
         horizontalBars: true,
         axisY: {
@@ -487,6 +497,14 @@ function plotAddDataSelOpt(key) {
     elemOption.setAttribute("value", key);
     elemOption.innerHTML = language[config["lang"]][key];
     elemDataSel.appendChild(elemOption);
+}
+
+function plotAddDataSortOpt(key) {
+    var elemDataSort = document.getElementById("plot-data-sort");
+    var elemOption = document.createElement("option");
+    elemOption.setAttribute("value", key);
+    elemOption.innerHTML = language[config["lang"]][key];
+    elemDataSort.appendChild(elemOption);
 }
 
 function plotSelectData() {
@@ -508,8 +526,7 @@ function settingsSetup() {
         }
     }
 
-    // My localtion settings
-
+    // My location settings
     var elemLat = document.getElementById("settings-location-lat");
     var elemLon = document.getElementById("settings-location-lon");
 
@@ -591,18 +608,17 @@ function configSetup() {
     if (params.has("tab_selected"))
         config["tab_selected"] = params.get("tab_selected");
 
-    // Table selected 
-    if (params.has("table_selected"))
-        config["table_selected"] = params.get("table_selected");
+    // Sort (table & plot) selected 
+    if (params.has("sort_selected"))
+        config["sort_selected"] = params.get("sort_selected");
 
-    // Table sort 
-    if (params.has("table_ascending"))
-        config["table_ascending"] = params.get("table_ascending") == "true";
+    // Sort (table & plot) ascending
+    if (params.has("sort_ascending"))
+        config["sort_ascending"] = params.get("sort_ascending") == "true";
 
     // Plot selected data
     if (params.has("plot_selected"))
         config["plot_selected"] = params.get("plot_selected");
-
 }
 
 // Will reload page
@@ -627,20 +643,12 @@ function configSetSelectedTab(selectedTab) {
     history.replaceState({},selectedTab,"?" + params.toString());
 }
 
-function configSetTableSelSort(selected, ascending) {
+function configSetSort(selected, ascending) {
     const params = new URLSearchParams(window.location.search);
-    params.set("table_selected", selected);
-    params.set("table_ascending", ascending);
+    params.set("sort_selected", selected);
+    params.set("sort_ascending", ascending);
     // Replace history
     history.replaceState({},selected+ascending,"?" + params.toString());    
-}
-
-// Will reload page
-function configSetPlotSelData(selected) {
-    const params = new URLSearchParams(window.location.search);
-    params.set("plot_selected", selected);
-    // Replace history
-    window.location.search = params.toString(); // Will reload page   
 }
 
 </script>
@@ -675,8 +683,15 @@ function configSetPlotSelData(selected) {
     <!----------------------------------------------------------------------------------->
     <!-- Plot TAB -->
     <div class="tab-page" id="tab-plot-page">
-        <select id="plot-data-select" onchange="plotSelectData()"></select>
-        <div class="ct-chart ct-perfect-fourth"></div>
+        <div class="plot-select-group">
+            <b>Measure</b>
+            <select id="plot-data-select" onchange="plotSelectData()"></select>
+        </div>
+        <div class="plot-select-group">
+            <b>Sort</b>
+            <select id="plot-data-sort" onchange="plotSortData()"></select>
+        </div>
+        <div class="ct-chart"></div>
     </div>
 
     <!----------------------------------------------------------------------------------->

@@ -176,7 +176,7 @@ database = [
         "latitude" : 61.8905057807043, 
         "longitude" : 12.832153473844823
     }
-    
+
     /* Template
     {
         "name" : "",
@@ -206,8 +206,8 @@ config = {
     "longitude" : 18.07172903837957,
     "map_zoom" : 5.5,
     "tab_selected" : "tab-table",
-    "table_selected" : "name",
-    "table_ascending" : true,
+    "sort_selected" : "name",
+    "sort_ascending" : true,
     "plot_label" : "name",
-    "plot_selected" : "vertical_drop"
+    "plot_selected" : "vertical_drop",
 };
