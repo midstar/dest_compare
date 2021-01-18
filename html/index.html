@@ -443,6 +443,16 @@ function mapRefresh() {
 // Plot page
 
 function plotSetup() {
+    // Fill the data select options
+    plotAddDataSelOpt(config['plot_selected']); // Selected data first
+    for (var i = 0 ; i < keys.length ; i++) {
+        if (keys[i] != config['plot_label'] && 
+            keys[i] != config['plot_selected']) {
+            plotAddDataSelOpt(keys[i]);
+        }
+    }
+    
+
     // Extract labels and data series
     var labels = [];
     var series = []
@@ -471,13 +481,26 @@ function plotSetup() {
     new Chartist.Bar('.ct-chart', data, options);
 }
 
+function plotAddDataSelOpt(key) {
+    var elemDataSel = document.getElementById("plot-data-select");
+    var elemOption = document.createElement("option");
+    elemOption.setAttribute("value", key);
+    elemOption.innerHTML = language[config["lang"]][key];
+    elemDataSel.appendChild(elemOption);
+}
+
+function plotSelectData() {
+    var elemDataSel = document.getElementById("plot-data-select");
+    // Will reload page
+    configSetPlotSelData(elemDataSel.value);    
+}
+
 //////////////////////////////////////////////////////////////////////////////
 // Settings page
 
 function settingsSetup() {
 
     // Language settings
-    var elemLangSel = document.getElementById("settings-language-select");
     settingsAddLangOpt(config["lang"]); // Selected language first
     for (lang in language) {
         if (lang != config["lang"]) {
@@ -576,6 +599,10 @@ function configSetup() {
     if (params.has("table_ascending"))
         config["table_ascending"] = params.get("table_ascending") == "true";
 
+    // Plot selected data
+    if (params.has("plot_selected"))
+        config["plot_selected"] = params.get("plot_selected");
+
 }
 
 // Will reload page
@@ -606,6 +633,14 @@ function configSetTableSelSort(selected, ascending) {
     params.set("table_ascending", ascending);
     // Replace history
     history.replaceState({},selected+ascending,"?" + params.toString());    
+}
+
+// Will reload page
+function configSetPlotSelData(selected) {
+    const params = new URLSearchParams(window.location.search);
+    params.set("plot_selected", selected);
+    // Replace history
+    window.location.search = params.toString(); // Will reload page   
 }
 
 </script>
@@ -640,6 +675,7 @@ function configSetTableSelSort(selected, ascending) {
     <!----------------------------------------------------------------------------------->
     <!-- Plot TAB -->
     <div class="tab-page" id="tab-plot-page">
+        <select id="plot-data-select" onchange="plotSelectData()"></select>
         <div class="ct-chart ct-perfect-fourth"></div>
     </div>
 
@@ -648,8 +684,7 @@ function configSetTableSelSort(selected, ascending) {
     <div class="tab-page" id="tab-settings-page">
         <div class="settings-group">
             <div class="settings-title" id="settings-language-title">Language</div>
-            <select id="settings-language-select" onchange="settingsSelectLang()">
-            </select>
+            <select id="settings-language-select" onchange="settingsSelectLang()"></select>
         </div>
         <hr>
         <div class="settings-group">
