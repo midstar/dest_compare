@@ -120,15 +120,16 @@
 // Misc
 
 window.onload = function() {
+
     configSetup();
 
     localize();
 
-    tabSetup(config["tab_selected"]);
+    tabSetup();
 
     databasePreprocess();
 
-    updateTable(config["table_selected"], config["table_ascending"]);
+    tableUpdate(config["table_selected"], config["table_ascending"]);
 
     plotSetup();
 
@@ -178,8 +179,8 @@ function databasePreprocess() {
 //////////////////////////////////////////////////////////////////////////////
 // TAB page general handling
 
-function tabSetup(defaultTabPageId) {
-    tabShow(defaultTabPageId);
+function tabSetup() {
+    tabShow(config["tab_selected"]);
 
     tabButtons = document.getElementsByClassName("tab-button");
     for (var i = 0; i < tabButtons.length ; i++) {
@@ -216,7 +217,7 @@ function tabShow(tabId) {
     // is hidden during setup
     if (tabId == "tab-map") {
         setTimeout(function() {
-            refreshMap();
+            mapRefresh();
         }, 100);
     }
 } 
@@ -224,7 +225,11 @@ function tabShow(tabId) {
 //////////////////////////////////////////////////////////////////////////////
 // Table page
 
-function updateTable(selected, ascending) {
+function tableSetup() {
+    tableUpdate(config["table_selected"], config["table_ascending"])
+}
+
+function tableUpdate(selected, ascending) {
     configSetTableSelSort(selected, ascending);
 
     var table = document.getElementById("table");
@@ -246,7 +251,7 @@ function updateTable(selected, ascending) {
                 symbol = " &#8593;";
             }
         }
-        cell_head.setAttribute("onclick", "updateTable(\"" + keys[i] + "\", " + clickAscending + ")");
+        cell_head.setAttribute("onclick", "tableUpdate(\"" + keys[i] + "\", " + clickAscending + ")");
         cell_head.innerHTML = language[config["lang"]][keys[i]] + symbol;
         row_head.appendChild(cell_head);
     }
@@ -281,7 +286,7 @@ function updateTable(selected, ascending) {
 // Map page
 
 var map = undefined;
-var selectLatLong = false;
+var mapSelectHome = false;
 
 function mapSetup() {
 
@@ -295,7 +300,7 @@ function mapSetup() {
         ],
         view: new ol.View({
             center: ol.proj.fromLonLat([config["longitude"], config["latitude"]]),
-            zoom: config["map-zoom"]
+            zoom: config["map_zoom"]
         })
     });
 
@@ -365,7 +370,7 @@ function mapSetup() {
 
     // Handle click on any of the markers
     map.on('singleclick', function (event) {
-        if (selectLatLong) {
+        if (mapSelectHome) {
             var lonLat = ol.proj.toLonLat(event.coordinate);
             // Will reload page
             configSetLatLon(lonLat[1], lonLat[0]);
@@ -375,7 +380,7 @@ function mapSetup() {
                                 return feature;
                             });
             if (feature) {
-                updatePopup(popup, feature.get("databaseIndex"));
+                mapUpdatePopup(popup, feature.get("databaseIndex"));
                 var coordinate = event.coordinate;
                 overlay.setPosition(coordinate);
             } else {
@@ -391,7 +396,7 @@ function mapSetup() {
                             return feature;
                         });
         if (feature) {
-            updatePopup(popup, feature.get("databaseIndex"));
+            mapUpdatePopup(popup, feature.get("databaseIndex"));
             var coordinate = event.coordinate;
             overlay.setPosition(coordinate);
         } else {
@@ -400,7 +405,7 @@ function mapSetup() {
     });
 }
 
-function updatePopup(popup, databaseIndex) {
+function mapUpdatePopup(popup, databaseIndex) {
     if (databaseIndex == -1) {
         popup.innerHTML = language[config["lang"]]["html-tag-id"]["settings-location-title"];
     } else {
@@ -428,7 +433,7 @@ function updatePopup(popup, databaseIndex) {
 
 // This is a workaround for the map not being created correctly when the
 // map div is not visible during map setup
-function refreshMap() {
+function mapRefresh() {
     if (map != undefined) {
         map.updateSize();
     }
@@ -443,22 +448,19 @@ function plotSetup() {
     var series = []
     for (var i = 0; i < database.length ; i++) {
         var elem = database[i];
-        labels.push(elem['name']);
-        series.push(elem['vertical_drop']);
+        labels.push(elem[config['plot_label']]);
+        series.push(elem[config['plot_selected']]);
     }
 
-
     var data = {
-        // A labels array that can contain any sort of values
         labels: labels,
-        // Our series array that contains series objects or in this case series data arrays
         series: [
             series
         ]
     };
 
-    var settings = {
-        seriesBarDistance: 10,
+    var options = {
+        seriesBarDistance: 500,
         reverseData: true,
         horizontalBars: true,
         axisY: {
@@ -466,10 +468,7 @@ function plotSetup() {
         }
     }
 
-    // Create a new line chart object where as first parameter we pass in a selector
-    // that is resolving to our chart container element. The Second parameter
-    // is the actual data object.
-    new Chartist.Bar('.ct-chart', data, settings);
+    new Chartist.Bar('.ct-chart', data, options);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -479,10 +478,10 @@ function settingsSetup() {
 
     // Language settings
     var elemLangSel = document.getElementById("settings-language-select");
-    addLanguageOpt(config["lang"]); // Selected language first
+    settingsAddLangOpt(config["lang"]); // Selected language first
     for (lang in language) {
         if (lang != config["lang"]) {
-            addLanguageOpt(lang);
+            settingsAddLangOpt(lang);
         }
     }
 
@@ -500,7 +499,7 @@ function settingsSetup() {
 
 }
 
-function addLanguageOpt(lang) {
+function settingsAddLangOpt(lang) {
     var elemLangSel = document.getElementById("settings-language-select");
     var elemOption = document.createElement("option");
     elemOption.setAttribute("value", lang);
@@ -508,14 +507,14 @@ function addLanguageOpt(lang) {
     elemLangSel.appendChild(elemOption);
 }
 
-function selectLang() {
+function settingsSelectLang() {
     var elemLangSel = document.getElementById("settings-language-select");
     // Will reload page
     configLanguage(elemLangSel.value);
 }
 
 // Adjusts according to input min and max (handled as float)
-function adjustInputNumber(inputId) {
+function settingsAdjustInputNbr(inputId) {
     var elemInput = document.getElementById(inputId);
     var value = parseFloat(elemInput.value);
     if (value < elemInput.min || value > elemInput.max || isNaN(value))
@@ -525,24 +524,24 @@ function adjustInputNumber(inputId) {
     return elemInput.value;
 }
 
-function updateLatLon() {
-    const lat = adjustInputNumber("settings-location-lat");
-    const lon = adjustInputNumber("settings-location-lon");
+function settingsUpdateLatLon() {
+    const lat = settingsAdjustInputNbr("settings-location-lat");
+    const lon = settingsAdjustInputNbr("settings-location-lon");
     configSetLatLon(lat, lon);
 }
 
-function fetchLatLon() {
+function settingsFetchLatLon() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(pos) {
             document.getElementById("settings-location-lat").value = pos.coords.latitude;
             document.getElementById("settings-location-lon").value = pos.coords.longitude;
-            updateLatLon();
+            settingsUpdateLatLon();
         });
     }
 }
 
-function selectLatLonMap() {
-    selectLatLong = true;
+function settingsSelectLatLonMap() {
+    mapSelectHome = true;
     tabShow("tab-map");
 }
 
@@ -563,7 +562,7 @@ function configSetup() {
         config["latitude"] = parseFloat(params.get("lat"));
         config["longitude"] = parseFloat(params.get("lon"));
     } else 
-        fetchLatLon();
+        settingsFetchLatLon();
     
     // Selected tab
     if (params.has("tab_selected"))
@@ -649,7 +648,7 @@ function configSetTableSelSort(selected, ascending) {
     <div class="tab-page" id="tab-settings-page">
         <div class="settings-group">
             <div class="settings-title" id="settings-language-title">Language</div>
-            <select id="settings-language-select" onchange="selectLang()">
+            <select id="settings-language-select" onchange="settingsSelectLang()">
             </select>
         </div>
         <hr>
@@ -658,15 +657,15 @@ function configSetTableSelSort(selected, ascending) {
             <table>
                 <tr>
                     <td id="settings-location-lat-label">Latitude</td>
-                    <td><input type="number" min="-90" max="90" id="settings-location-lat" onchange="updateLatLon()"></input></td>
+                    <td><input type="number" min="-90" max="90" id="settings-location-lat" onchange="settingsUpdateLatLon()"></input></td>
                 </tr>
                 <tr>
                     <td id="settings-location-lon-label">Longitude</td>
-                    <td><input type="number" min="-180" max="180" id="settings-location-lon" onchange="updateLatLon()"></input></td>
+                    <td><input type="number" min="-180" max="180" id="settings-location-lon" onchange="settingsUpdateLatLon()"></input></td>
                 </tr>
             <table>
-            <button id="settings-location-fetch" onclick="fetchLatLon()">Fetch my position</button>
-            <button id="settings-location-select-map" onclick="selectLatLonMap()">Select on map</button>
+            <button id="settings-location-fetch" onclick="settingsFetchLatLon()">Fetch my position</button>
+            <button id="settings-location-select-map" onclick="settingsSelectLatLonMap()">Select on map</button>
         </div>
     </div>
 
