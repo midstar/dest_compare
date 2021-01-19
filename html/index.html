@@ -118,8 +118,6 @@
     margin-left: 5px;
 }
 
-
-
 </style>
 
 <script>
@@ -486,6 +484,7 @@ function plotUpdate() {
         }
     }
     
+    
     // Fill the data sort selection options
     document.getElementById("plot-data-sort").innerHTML = ""; // Reset
     plotAddDataSortOpt(config['sort_selected']); // Selected data first
@@ -498,26 +497,48 @@ function plotUpdate() {
     // Fill in the data sort ascending checkbox
     document.getElementById("plot-data-sort-asc").checked = config['sort_ascending'];
 
+    var series = [];
+
+    // Check i plot label has sub-keys (@) (for stacked bar)
+    var masterKey = config['plot_selected'] + "@";
+    var subKeys = [];
+    for (var i = 0 ; i < keys.length ; i++) {
+        if (keys[i].startsWith(masterKey)) {
+            subKeys.push(keys[i]);
+            series.push({
+                name: language[config["lang"]][keys[i]],
+                data: []
+            });
+        }
+    }
+
     // Extract labels and data series
     var labels = [];
-    var series = []
     for (var i = 0; i < database.length ; i++) {
         var elem = database[i];
         labels.push(elem[config['plot_label']]);
-        series.push(elem[config['plot_selected']]);
+        if (subKeys.length == 0) {
+            series.push(elem[config['plot_selected']]);
+        } else {
+            for (var j = 0; j < subKeys.length ; j++) {
+                series[j].data.push(elem[subKeys[j]])
+            }
+        }
+    }
+    if (subKeys.length == 0) {
+        series = [series];
     }
 
     var data = {
         labels: labels,
-        series: [
-            series
-        ]
+        series: series
     };
 
     var options = {
         seriesBarDistance: 5,
         reverseData: true,
         horizontalBars: true,
+        stackBars: (subKeys.length != 0),
         axisY: {
             offset: 70
         }
@@ -753,7 +774,7 @@ function configSetPlotSelData(selected) {
             <div id="plot-select-sort-asc-label">Ascending</div>
             <input type="checkbox" id="plot-data-sort-asc" onchange="plotSortData()">
         </div>
-        <div class="ct-chart"></div>
+        <div class="ct-chart ct-golden-section"></div>
     </div>
 
     <!----------------------------------------------------------------------------------->
