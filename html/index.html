@@ -129,9 +129,8 @@ window.onload = function() {
 
     databasePreprocess();
 
-    tableSetup();
-
-    plotSetup();
+    // Will update the table and plot
+    updateSort(config["sort_selected"], config["sort_ascending"]);
 
     mapSetup();
 
@@ -249,6 +248,14 @@ function tabShow(tabId) {
             mapRefresh();
         }, 100);
     }
+
+    // Workaround for plot not being displayed properly when when plot div
+    // is hidden during setup
+    if (tabId == "tab-plot") {
+        setTimeout(function() {
+            plotRefresh();
+        }, 100);
+    }
 }
 
 
@@ -256,11 +263,7 @@ function tabShow(tabId) {
 //////////////////////////////////////////////////////////////////////////////
 // Table page
 
-function tableSetup() {
-    tableUpdate();
-}
-
-function tableUpdate(selected, ascending) {
+function tableUpdate() {
     var selected = config["sort_selected"];
     var ascending = config["sort_ascending"];
     var table = document.getElementById("table");
@@ -461,9 +464,7 @@ function mapRefresh() {
 //////////////////////////////////////////////////////////////////////////////
 // Plot page
 
-function plotSetup() {
-    plotUpdate();
-}
+var plot = undefined;
 
 function plotUpdate() {
 
@@ -475,7 +476,6 @@ function plotUpdate() {
             plotAddDataSelOpt(keys[i]);
         }
     }
-
     
     // Fill the data sort selection options
     plotAddDataSortOpt(config['sort_selected']); // Selected data first
@@ -511,7 +511,7 @@ function plotUpdate() {
         }
     }
 
-    new Chartist.Bar('.ct-chart', data, options);
+    plot = new Chartist.Bar('.ct-chart', data, options);
 }
 
 function plotAddDataSelOpt(key) {
@@ -534,6 +534,19 @@ function plotSelectData() {
     var elemDataSel = document.getElementById("plot-data-select");
     // Will reload page
     configSetPlotSelData(elemDataSel.value);    
+}
+
+function plotSortData() {
+    var elemDataSort = document.getElementById("plot-data-sort");
+    updateSort(elemDataSort.value, config["sort_ascending"]);
+}
+
+// This is a workaround for the plot not being created correctly when the
+// plot div is not visible during plot setup
+function plotRefresh() {
+    if (plot != undefined) {
+        plot.update();
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -667,11 +680,20 @@ function configSetSelectedTab(selectedTab) {
 }
 
 function configSetSort(selected, ascending) {
+    config["sort_selected"] = selected;
+    config["sort_ascending"] = ascending;
     const params = new URLSearchParams(window.location.search);
     params.set("sort_selected", selected);
     params.set("sort_ascending", ascending);
     // Replace history
     history.replaceState({},selected+ascending,"?" + params.toString());    
+}
+
+// Will reload page 
+function configSetPlotSelData(selected) {
+    const params = new URLSearchParams(window.location.search);
+    params.set("plot_selected", selected);
+    window.location.search = params.toString(); // Will reload page    
 }
 
 </script>
