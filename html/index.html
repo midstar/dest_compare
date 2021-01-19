@@ -5,8 +5,7 @@
 <title>Sweski</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/css/ol.css" type="text/css">
 <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
-<link rel="stylesheet" href="chartist.min.css">
-<script src="chartist.min.js"></script>
+<script src="Chart.min.js"></script>
 <script src="data.js"></script>
 <style>
 
@@ -497,6 +496,7 @@ function plotUpdate() {
     // Fill in the data sort ascending checkbox
     document.getElementById("plot-data-sort-asc").checked = config['sort_ascending'];
 
+    var colors = ['green', 'blue', 'red', 'black', 'yellow', 'cyan', 'gray'];
     var series = [];
 
     // Check i plot label has sub-keys (@) (for stacked bar)
@@ -506,10 +506,19 @@ function plotUpdate() {
         if (keys[i].startsWith(masterKey)) {
             subKeys.push(keys[i]);
             series.push({
-                name: language[config["lang"]][keys[i]],
+                label: language[config["lang"]][keys[i]],
+                backgroundColor: colors[(subKeys.length - 1) % colors.length],
                 data: []
             });
         }
+    }
+    if (subKeys.length == 0) {
+        subKeys.push(config['plot_selected']);
+        series.push({
+            label: language[config["lang"]][config['plot_selected']],
+            backgroundColor: colors[0],
+            data: []
+        });
     }
 
     // Extract labels and data series
@@ -517,34 +526,39 @@ function plotUpdate() {
     for (var i = 0; i < database.length ; i++) {
         var elem = database[i];
         labels.push(elem[config['plot_label']]);
-        if (subKeys.length == 0) {
-            series.push(elem[config['plot_selected']]);
-        } else {
-            for (var j = 0; j < subKeys.length ; j++) {
-                series[j].data.push(elem[subKeys[j]])
+        for (var j = 0; j < subKeys.length ; j++) {
+            series[j].data.push(elem[subKeys[j]])
+        }
+    }
+
+    var ctx = document.getElementById('plot').getContext('2d');
+    var barChartData = {
+			labels: labels,
+			datasets: series
+	};
+    plot = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: barChartData,
+        options: {
+            title: {
+                display: true,
+                text: language[config["lang"]][config['plot_selected']]
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false
+            },
+            responsive: true,
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
             }
         }
-    }
-    if (subKeys.length == 0) {
-        series = [series];
-    }
-
-    var data = {
-        labels: labels,
-        series: series
-    };
-
-    var options = {
-        seriesBarDistance: 5,
-        reverseData: true,
-        horizontalBars: true,
-        stackBars: (subKeys.length != 0),
-        axisY: {
-            offset: 70
-        }
-    }
-
-    plot = new Chartist.Bar('.ct-chart', data, options);
+    });
 }
 
 function plotAddDataSelOpt(key) {
@@ -578,9 +592,7 @@ function plotSortData() {
 // This is a workaround for the plot not being created correctly when the
 // plot div is not visible during plot setup
 function plotRefresh() {
-    if (plot != undefined) {
-        plot.update();
-    }
+    // Chart.js works fine to update in the background
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -774,7 +786,7 @@ function configSetPlotSelData(selected) {
             <div id="plot-select-sort-asc-label">Ascending</div>
             <input type="checkbox" id="plot-data-sort-asc" onchange="plotSortData()">
         </div>
-        <div class="ct-chart ct-golden-section"></div>
+        <canvas id="plot" width="400" height="400"></canvas>
     </div>
 
     <!----------------------------------------------------------------------------------->
