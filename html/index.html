@@ -93,6 +93,14 @@
 }
 
 /****************************************************************************/
+/* Plot style */
+
+.plot-select-group {
+    display: inline-block;
+    font-size: 12px;
+}
+
+/****************************************************************************/
 /* Settings style */
 
 .settings-title {
@@ -469,6 +477,7 @@ var plot = undefined;
 function plotUpdate() {
 
     // Fill the data select options
+    document.getElementById("plot-data-select").innerHTML = ""; // Reset
     plotAddDataSelOpt(config['plot_selected']); // Selected data first
     for (var i = 0 ; i < keys.length ; i++) {
         if (keys[i] != config['plot_label'] && 
@@ -478,13 +487,16 @@ function plotUpdate() {
     }
     
     // Fill the data sort selection options
+    document.getElementById("plot-data-sort").innerHTML = ""; // Reset
     plotAddDataSortOpt(config['sort_selected']); // Selected data first
     for (var i = 0 ; i < keys.length ; i++) {
         if (keys[i] != config['sort_selected']) {
             plotAddDataSortOpt(keys[i]);
         }
     }
-    
+
+    // Fill in the data sort ascending checkbox
+    document.getElementById("plot-data-sort-asc").checked = config['sort_ascending'];
 
     // Extract labels and data series
     var labels = [];
@@ -538,7 +550,8 @@ function plotSelectData() {
 
 function plotSortData() {
     var elemDataSort = document.getElementById("plot-data-sort");
-    updateSort(elemDataSort.value, config["sort_ascending"]);
+    var elemDataSortAsc = document.getElementById("plot-data-sort-asc");
+    updateSort(elemDataSort.value, elemDataSortAsc.checked);
 }
 
 // This is a workaround for the plot not being created correctly when the
@@ -729,12 +742,16 @@ function configSetPlotSelData(selected) {
     <!-- Plot TAB -->
     <div class="tab-page" id="tab-plot-page">
         <div class="plot-select-group">
-            <b>Measure</b>
+            <div id="plot-select-measure-label">Measure</div>
             <select id="plot-data-select" onchange="plotSelectData()"></select>
         </div>
         <div class="plot-select-group">
-            <b>Sort</b>
+            <div id="plot-select-sort-label">Sort</div>
             <select id="plot-data-sort" onchange="plotSortData()"></select>
+        </div>
+        <div class="plot-select-group">
+            <div id="plot-select-sort-asc-label">Ascending</div>
+            <input type="checkbox" id="plot-data-sort-asc" onchange="plotSortData()">
         </div>
         <div class="ct-chart"></div>
     </div>
