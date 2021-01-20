@@ -181,6 +181,57 @@ database = [
         "lift_count@gondola" : 0,
         "latitude" : 61.8905057807043, 
         "longitude" : 12.832153473844823
+    },
+    {
+        "name" : "Kungsberget",
+        "altitude" : 309,
+        "vertical_drop" : 200,
+        "piste_count" : 22,
+        "piste_count@green" : 7,
+        "piste_count@blue" : 7,
+        "piste_count@red" : 3,
+        "piste_count@black" : 3,
+        "piste_longest" : 1200,
+        "lift_count" : 10,
+        "lift_count@chair" : 3,
+        "lift_count@surface" : 7,
+        "lift_count@gondola" : 0,
+        "latitude" : 60.75985980297969, 
+        "longitude" : 16.497606982828785 
+    },
+    {
+        "name" : "Lindvallen",
+        "altitude" : 675,
+        "vertical_drop" : 303,
+        "piste_count" : 51,
+        "piste_count@green" : 22,
+        "piste_count@blue" : 10,
+        "piste_count@red" : 13,
+        "piste_count@black" : 3,
+        "piste_longest" : 1800,
+        "lift_count" : 50,
+        "lift_count@chair" : 46,
+        "lift_count@surface" : 4,
+        "lift_count@gondola" : 0,
+        "latitude" : 61.160565136378295, 
+        "longitude" : 13.189642572601171 
+    },
+    {
+        "name" : "Högfjället",
+        "altitude" : 924,
+        "vertical_drop" : 303,
+        "piste_count" : 57,
+        "piste_count@green" : 31,
+        "piste_count@blue" : 9,
+        "piste_count@red" : 11,
+        "piste_count@black" : 4,
+        "piste_longest" : 2500,
+        "lift_count" : 48,
+        "lift_count@chair" : 44,
+        "lift_count@surface" : 4,
+        "lift_count@gondola" : 0,
+        "latitude" : 61.15675412792105, 
+        "longitude" : 13.117034926924902 
     }
 
     /* Template
