@@ -356,7 +356,7 @@ function mapSetup() {
             config["longitude"], 
             config["latitude"]]
         )),
-        databaseIndex: -1 // Custom property
+        databaseElem: undefined // Custom property
     });
     homeMarker.setStyle(styleRed);
     markers.push(homeMarker);
@@ -369,7 +369,7 @@ function mapSetup() {
                     elem["longitude"], 
                     elem["latitude"]]
             )),
-            databaseIndex: i // Custom property
+            databaseElem: elem // Custom property
         });
         marker.setStyle(styleBlue);
         markers.push(marker);
@@ -407,7 +407,7 @@ function mapSetup() {
                                 return feature;
                             });
             if (feature) {
-                mapUpdatePopup(popup, feature.get("databaseIndex"));
+                mapUpdatePopup(popup, feature.get("databaseElem"));
                 var coordinate = event.coordinate;
                 overlay.setPosition(coordinate);
             } else {
@@ -423,7 +423,7 @@ function mapSetup() {
                             return feature;
                         });
         if (feature) {
-            mapUpdatePopup(popup, feature.get("databaseIndex"));
+            mapUpdatePopup(popup, feature.get("databaseElem"));
             var coordinate = event.coordinate;
             overlay.setPosition(coordinate);
         } else {
@@ -432,8 +432,8 @@ function mapSetup() {
     });
 }
 
-function mapUpdatePopup(popup, databaseIndex) {
-    if (databaseIndex == -1) {
+function mapUpdatePopup(popup, databaseElem) {
+    if (databaseElem == undefined) {
         popup.innerHTML = language[config["lang"]]["html-tag-id"]["settings-location-title"];
     } else {
         // Delete old elements
@@ -448,7 +448,7 @@ function mapUpdatePopup(popup, databaseIndex) {
             cell_desc.innerHTML = language[config["lang"]][keys[i]];
 
             var cell_value = document.createElement("td");
-            cell_value.innerHTML = database[databaseIndex][keys[i]];
+            cell_value.innerHTML = databaseElem[keys[i]];
 
             row.appendChild(cell_desc);
             row.appendChild(cell_value);
@@ -545,7 +545,7 @@ function plotUpdate() {
     
     // Force height of plot so that bars will look nice
     document.getElementById("plot").height = labels.length * 12 + 24;
-    
+
     plot = new Chart(ctx, {
         type: 'horizontalBar',
         data: barChartData,
