@@ -139,7 +139,7 @@ database = [
         "piste_count@green" : 9,
         "piste_count@blue" : 11,
         "piste_count@red" : 3,
-        "piste_count@black" : 33,
+        "piste_count@black" : 10,
         "piste_longest" : 2700,
         "lift_count" : 13,
         "lift_count@chair" : 5,

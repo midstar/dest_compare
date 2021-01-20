@@ -532,10 +532,20 @@ function plotUpdate() {
     }
 
     var ctx = document.getElementById('plot').getContext('2d');
+
     var barChartData = {
 			labels: labels,
 			datasets: series
-	};
+    };
+
+    if (plot != undefined) {
+        // Clear previous data
+        plot.destroy();
+    }
+    
+    // Force height of plot so that bars will look nice
+    document.getElementById("plot").height = labels.length * 12 + 24;
+    
     plot = new Chart(ctx, {
         type: 'horizontalBar',
         data: barChartData,
@@ -551,7 +561,7 @@ function plotUpdate() {
             responsive: true,
             scales: {
                 xAxes: [{
-                    stacked: true,
+                    stacked: true
                 }],
                 yAxes: [{
                     stacked: true
@@ -559,6 +569,7 @@ function plotUpdate() {
             }
         }
     });
+
 }
 
 function plotAddDataSelOpt(key) {
