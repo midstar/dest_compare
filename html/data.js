@@ -200,24 +200,24 @@ database = [
         "longitude" : 16.497606982828785 
     },
     {
-        "name" : "Lindvallen",
-        "altitude" : 675,
-        "vertical_drop" : 303,
-        "piste_count" : 51,
-        "piste_count@green" : 22,
-        "piste_count@blue" : 10,
-        "piste_count@red" : 13,
-        "piste_count@black" : 3,
-        "piste_longest" : 1800,
-        "lift_count" : 50,
-        "lift_count@chair" : 46,
-        "lift_count@surface" : 4,
+        "name" : "Hundfjället",
+        "altitude" : 925,
+        "vertical_drop" : 240,
+        "piste_count" : 22,
+        "piste_count@green" : 6,
+        "piste_count@blue" : 4,
+        "piste_count@red" : 8,
+        "piste_count@black" : 4,
+        "piste_longest" : 2100,
+        "lift_count" : 18,
+        "lift_count@chair" : 3,
+        "lift_count@surface" : 15,
         "lift_count@gondola" : 0,
-        "latitude" : 61.160565136378295, 
-        "longitude" : 13.189642572601171 
+        "latitude" : 61.17667448340161, 
+        "longitude" : 12.964537320359492 
     },
     {
-        "name" : "Högfjället",
+        "name" : "Lindvallen/Högfjället",
         "altitude" : 924,
         "vertical_drop" : 303,
         "piste_count" : 57,
@@ -230,8 +230,8 @@ database = [
         "lift_count@chair" : 44,
         "lift_count@surface" : 4,
         "lift_count@gondola" : 0,
-        "latitude" : 61.15675412792105, 
-        "longitude" : 13.117034926924902 
+        "latitude" : 61.152354120223826, 
+        "longitude" : 13.149312456350115 
     }
 
     /* Template
