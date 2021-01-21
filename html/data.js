@@ -217,6 +217,23 @@ database = [
         "longitude" : 12.964537320359492 
     },
     {
+        "name" : "Tandådalen",
+        "altitude" : 925,
+        "vertical_drop" : 240,
+        "piste_count" : 29,
+        "piste_count@green" : 8,
+        "piste_count@blue" : 8,
+        "piste_count@red" : 5,
+        "piste_count@black" : 8,
+        "piste_longest" : 2100,
+        "lift_count" : 22,
+        "lift_count@chair" : 2,
+        "lift_count@surface" : 20,
+        "lift_count@gondola" : 0,
+        "latitude" : 61.176456429481945, 
+        "longitude" : 13.000819795824926 
+    },
+    {
         "name" : "Lindvallen/Högfjället",
         "altitude" : 924,
         "vertical_drop" : 303,
@@ -227,11 +244,28 @@ database = [
         "piste_count@black" : 4,
         "piste_longest" : 2500,
         "lift_count" : 48,
-        "lift_count@chair" : 44,
-        "lift_count@surface" : 4,
+        "lift_count@chair" : 4,
+        "lift_count@surface" : 44,
         "lift_count@gondola" : 0,
         "latitude" : 61.152354120223826, 
         "longitude" : 13.149312456350115 
+    },
+    {
+        "name" : "Orsa/Grönklitt",
+        "altitude" : 561,
+        "vertical_drop" : 165,
+        "piste_count" : 23,
+        "piste_count@green" : 2,
+        "piste_count@blue" : 12,
+        "piste_count@red" : 7,
+        "piste_count@black" : 2,
+        "piste_longest" : 1600,
+        "lift_count" : 15,
+        "lift_count@chair" : 1,
+        "lift_count@surface" : 14,
+        "lift_count@gondola" : 0,
+        "latitude" : 61.213445630900495, 
+        "longitude" : 14.542228329181208 
     }
 
     /* Template
