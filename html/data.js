@@ -266,6 +266,40 @@ database = [
         "lift_count@gondola" : 0,
         "latitude" : 61.213445630900495, 
         "longitude" : 14.542228329181208 
+    }, 
+    {
+        "name" : "Hemavan/Tärnaby",
+        "altitude" : 648 ,
+        "vertical_drop" : 665,
+        "piste_count" : 47,
+        "piste_count@green" : 15,
+        "piste_count@blue" : 13,
+        "piste_count@red" : 12,
+        "piste_count@black" : 7,
+        "piste_longest" : 5500,
+        "lift_count" : 14,
+        "lift_count@chair" : 1,
+        "lift_count@surface" : 12,
+        "lift_count@gondola" : 1,
+        "latitude" : 65.81886356829747, 
+        "longitude" : 15.107262803210993
+    }, 
+    {
+        "name" : "Dundret",
+        "altitude" : 825,
+        "vertical_drop" : 350,
+        "piste_count" : 9,
+        "piste_count@green" : 2,
+        "piste_count@blue" : 2,
+        "piste_count@red" : 2,
+        "piste_count@black" : 3,
+        "piste_longest" : 2500,
+        "lift_count" : 6,
+        "lift_count@chair" : 1,
+        "lift_count@surface" : 5,
+        "lift_count@gondola" : 0,
+        "latitude" : 67.105622501657, 
+        "longitude" : 20.640505854243514
     }
 
     /* Template
