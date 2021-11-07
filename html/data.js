@@ -351,6 +351,57 @@ database = [
         "lift_count@gondola" : 1,
         "latitude" : 60.66119652810417, 
         "longitude" : 12.966090024281197
+    }, 
+    {
+        "name" : "Lofsdalen",
+        "altitude" : 633,
+        "vertical_drop" : 492,
+        "piste_count" : 25,
+        "piste_count@green" : 5,
+        "piste_count@blue" : 7,
+        "piste_count@red" : 8,
+        "piste_count@black" : 4,
+        "piste_longest" : 3400,
+        "lift_count" : 9,
+        "lift_count@chair" : 2,
+        "lift_count@surface" : 7,
+        "lift_count@gondola" : 0,
+        "latitude" : 62.11454691414125, 
+        "longitude" : 13.296214350094129
+    }, 
+    {
+        "name" : "Tänndalen",
+        "altitude" : 720,
+        "vertical_drop" : 295,
+        "piste_count" : 53,
+        "piste_count@green" : 10,
+        "piste_count@blue" : 14,
+        "piste_count@red" : 23,
+        "piste_count@black" : 6,
+        "piste_longest" : 1600,
+        "lift_count" : 13,
+        "lift_count@chair" : 2,
+        "lift_count@surface" : 11,
+        "lift_count@gondola" : 0,
+        "latitude" : 62.5593, 
+        "longitude" : 12.2521
+    }, 
+    {
+        "name" : "Ramundberget",
+        "altitude" : 1060,
+        "vertical_drop" : 300,
+        "piste_count" : 42,
+        "piste_count@green" : 5,
+        "piste_count@blue" : 10,
+        "piste_count@red" : 14,
+        "piste_count@black" : 13,
+        "piste_longest" : 1650,
+        "lift_count" : 9,
+        "lift_count@chair" : 2,
+        "lift_count@surface" : 7,
+        "lift_count@gondola" : 0,
+        "latitude" : 62.701922356108604, 
+        "longitude" : 12.386333585324138
     }
 
     /* Template
