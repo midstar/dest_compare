@@ -402,6 +402,57 @@ database = [
         "lift_count@gondola" : 0,
         "latitude" : 62.701922356108604, 
         "longitude" : 12.386333585324138
+    }, 
+    {
+        "name" : "Funäsdalsberget",
+        "altitude" : 977,
+        "vertical_drop" : 300,
+        "piste_count" : 18,
+        "piste_count@green" : 3,
+        "piste_count@blue" : 6,
+        "piste_count@red" : 6,
+        "piste_count@black" : 3,
+        "piste_longest" : 2100,
+        "lift_count" : 5,
+        "lift_count@chair" : 1,
+        "lift_count@surface" : 4,
+        "lift_count@gondola" : 0,
+        "latitude" : 62.55522587293387, 
+        "longitude" : 12.558105561867647
+    }, 
+    {
+        "name" : "Kappruet",
+        "altitude" : 850,
+        "vertical_drop" : 165,
+        "piste_count" : 7,
+        "piste_count@green" : 1,
+        "piste_count@blue" : 4,
+        "piste_count@red" : 1,
+        "piste_count@black" : 1,
+        "piste_longest" : 1430,
+        "lift_count" : 2,
+        "lift_count@chair" : 0,
+        "lift_count@surface" : 2,
+        "lift_count@gondola" : 0,
+        "latitude" : 62.67560101179869, 
+        "longitude" : 12.770089916386912
+    }, 
+    {
+        "name" : "Tännstakröken",
+        "altitude" : 800,
+        "vertical_drop" : 245,
+        "piste_count" : 17,
+        "piste_count@green" : 2,
+        "piste_count@blue" : 6,
+        "piste_count@red" : 7,
+        "piste_count@black" : 2,
+        "piste_longest" : 2000,
+        "lift_count" : 5,
+        "lift_count@chair" : 1,
+        "lift_count@surface" : 4,
+        "lift_count@gondola" : 0,
+        "latitude" : 62.413541913813475, 
+        "longitude" : 12.71289524233967
     }
 
     /* Template
