@@ -1,5 +1,5 @@
 # Sweski
 
-A summary of swedish ski areas
+A summary of swedish ski areas. 
 
-Check it out [here on GitHub](https://htmlpreview.github.io/?https://github.com/midstar/sweski/blob/master/html/index.html)
+Check it out [here on GitHub Pages](https://midstar.github.io/sweski/html/index.html).

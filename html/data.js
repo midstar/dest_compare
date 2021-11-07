@@ -21,7 +21,7 @@ language = {
     // Swedish language
     "English" : {
 
-        // Part 1 - Localication of HTML tags (based on ID)
+        // Part 1 - Localization of HTML tags (based on ID)
         // These are mandatory for all type of databases
         "html-tag-id" : {
             "tab-table" : "Table",
