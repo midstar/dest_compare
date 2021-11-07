@@ -141,7 +141,7 @@ database = [
         "piste_count@red" : 6,
         "piste_count@black" : 6,
         "piste_longest" : 1956,
-        "lift_count" : 12,
+        "lift_count" : 10,
         "lift_count@chair" : 4,
         "lift_count@surface" : 6,
         "lift_count@gondola" : 0,
@@ -211,7 +211,7 @@ database = [
         "piste_longest" : 2800,
         "lift_count" : 24,
         "lift_count@chair" : 4,
-        "lift_count@surface" : 16,
+        "lift_count@surface" : 20,
         "lift_count@gondola" : 0,
         "latitude" : 61.8905057807043, 
         "longitude" : 12.832153473844823
