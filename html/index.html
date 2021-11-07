@@ -15,8 +15,8 @@
 /* Style the tab */
 .tab {
   overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
+  border: 1px solid rgb(125, 214, 243);
+  background-color: lightblue;
 }
 
 /* Style the buttons that are used to open the tab content */
@@ -39,19 +39,19 @@
 
 /* Change background color of buttons on hover */
 .tab button:hover {
-  background-color: #ddd;
+  background-color: rgb(125, 190, 211);
 }
 
 /* Create an active/current tab class */
 .tab button.active {
-  background-color: #ccc;
+  background-color: rgb(55, 138, 165);
 }
 
 /* Style the tab content */
 .tab-page {
   display: none;
   padding: 6px 12px;
-  border: 1px solid #ccc;
+  border: 1px solid rgb(125, 214, 243);
   border-top: none;
 }
 
@@ -71,6 +71,11 @@
 
 #tab-table-page tr:nth-child(even) {
     background-color: lightblue;
+}
+
+#tab-table-page th:hover {
+    font-size: 13px;
+    cursor:pointer;
 }
 
 /****************************************************************************/
