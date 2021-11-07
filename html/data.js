@@ -489,7 +489,7 @@ database = [
         "longitude" : 14.42446833284809
     }, 
     {
-        "name" : "Björliden",
+        "name" : "Björkliden",
         "altitude" : 1228,
         "vertical_drop" : 530,
         "piste_count" : 23,
@@ -538,6 +538,40 @@ database = [
         "lift_count@gondola" : 0,
         "latitude" : 66.15619299143366, 
         "longitude" : 19.9865448629485
+    }, 
+    {
+        "name" : "Kläppen",
+        "altitude" : 655,
+        "vertical_drop" : 315,
+        "piste_count" : 37,
+        "piste_count@green" : 17,
+        "piste_count@blue" : 9,
+        "piste_count@red" : 4,
+        "piste_count@black" : 7,
+        "piste_longest" : 3000,
+        "lift_count" : 19,
+        "lift_count@chair" : 1,
+        "lift_count@surface" : 17,
+        "lift_count@gondola" : 1,
+        "latitude" : 61.032505708691524, 
+        "longitude" : 13.340565184590742
+    }, 
+    {
+        "name" : "Bjursås",
+        "altitude" : 177,
+        "vertical_drop" : 180,
+        "piste_count" : 20,
+        "piste_count@green" : 6,
+        "piste_count@blue" : 6,
+        "piste_count@red" : 6,
+        "piste_count@black" : 2,
+        "piste_longest" : 1300,
+        "lift_count" : 10,
+        "lift_count@chair" : 2,
+        "lift_count@surface" : 8,
+        "lift_count@gondola" : 0,
+        "latitude" : 60.76730077493782, 
+        "longitude" : 15.461068182721997
     }
 
     /* Template
