@@ -130,6 +130,40 @@ database = [
         "lift_count@gondola" : 0,
         "latitude" : 62.4228664877963, 
         "longitude" : 13.957621303714978
+    }, 
+    {
+        "name" : "Vemdalsskalet",
+        "altitude" : 940,
+        "vertical_drop" : 360,
+        "piste_count" : 21,
+        "piste_count@green" : 4,
+        "piste_count@blue" : 5,
+        "piste_count@red" : 6,
+        "piste_count@black" : 6,
+        "piste_longest" : 1956,
+        "lift_count" : 12,
+        "lift_count@chair" : 4,
+        "lift_count@surface" : 6,
+        "lift_count@gondola" : 0,
+        "latitude" : 62.4820704, 
+        "longitude" : 13.9743083
+    }, 
+    {
+        "name" : "Klövsjö/Storhogna",
+        "altitude" : 755,
+        "vertical_drop" : 340,
+        "piste_count" : 20,
+        "piste_count@green" : 8,
+        "piste_count@blue" : 7,
+        "piste_count@red" : 2,
+        "piste_count@black" : 3,
+        "piste_longest" : 2010,
+        "lift_count" : 13,
+        "lift_count@chair" : 1,
+        "lift_count@surface" : 12,
+        "lift_count@gondola" : 0,
+        "latitude" : 62.49404163771742, 
+        "longitude" : 14.121895504261756
     },
     {
         "name" : "Romme Alpin",
@@ -300,6 +334,23 @@ database = [
         "lift_count@gondola" : 0,
         "latitude" : 67.105622501657, 
         "longitude" : 20.640505854243514
+    }, 
+    {
+        "name" : "Branäs",
+        "altitude" : 152,
+        "vertical_drop" : 415,
+        "piste_count" : 35,
+        "piste_count@green" : 12,
+        "piste_count@blue" : 13,
+        "piste_count@red" : 5,
+        "piste_count@black" : 1,
+        "piste_longest" : 3000,
+        "lift_count" : 22,
+        "lift_count@chair" : 2,
+        "lift_count@surface" : 19,
+        "lift_count@gondola" : 1,
+        "latitude" : 60.66119652810417, 
+        "longitude" : 12.966090024281197
     }
 
     /* Template
