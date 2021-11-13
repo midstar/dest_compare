@@ -27,8 +27,8 @@ file might be located elsewhere based on the "data" URL parameter.
 This software was originally written to compare different ski
 areas in Sweden. 
 
-Check it out here on GitHub Pages.
+Check it out here on GitHub Pages:
 
-[Swedish version](https://midstar.github.io/sweski/html/index.html?lang=English).
+[English example](https://midstar.github.io/sweski/html/index.html?lang=English).
 
-[Swedish version](https://midstar.github.io/sweski/html/index.html?lang=Svenska).
+[Swedish example](https://midstar.github.io/sweski/html/index.html?lang=Svenska).
