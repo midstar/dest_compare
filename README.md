@@ -29,6 +29,6 @@ areas in Sweden.
 
 Check it out here on GitHub Pages:
 
-[English example](https://midstar.github.io/sweski/html/index.html?lang=English).
+[English example](https://midstar.github.io/dest_compare/index.html?lang=English).
 
-[Swedish example](https://midstar.github.io/sweski/html/index.html?lang=Svenska).
+[Swedish example](https://midstar.github.io/dest_compare/index.html?lang=Svenska).
