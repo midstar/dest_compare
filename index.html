@@ -12,6 +12,8 @@
 <html>
 
 <!--------------------------------------------------------------------------->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes">
+<meta charset="utf-8"/>
 <head>
 <title id="main-title">Destination Comparison</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/css/ol.css" type="text/css">
@@ -309,12 +311,21 @@ function tableUpdate() {
     var ascending = config["sort_ascending"];
     var table = document.getElementById("table");
 
+    // On small screens or browser sizes and if many keys, remove all
+    // subkeys
+    var removeSubkeys = false;
+    if ((window.innerWidth < 1000) && (keys.length > 5)) {
+        removeSubkeys = true;
+    }
+
     // Delete old elements
     table.innerHTML = "";
 
     // Generate titles (th)
     var row_head = document.createElement("tr");
     for (var i = 0 ; i < keys.length ; i++) {
+        if (removeSubkeys && keys[i].includes("@"))
+            continue; // Skip this key
         var cell_head = document.createElement("th");
         var symbol = "";
         var clickAscending = "true";
@@ -337,6 +348,8 @@ function tableUpdate() {
         var elem = database[i];
         var row = document.createElement("tr");
         for (var j = 0 ; j < keys.length ; j++) {
+            if (removeSubkeys && keys[j].includes("@"))
+                continue; // Skip this key
             var cell = document.createElement("td");
             cell.innerHTML = elem[keys[j]];
             row.appendChild(cell);
