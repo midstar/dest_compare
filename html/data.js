@@ -24,6 +24,7 @@ language = {
         // Part 1 - Localization of HTML tags (based on ID)
         // These are mandatory for all type of databases
         "html-tag-id" : {
+            "main-title" : "Swedish ski areas",
             "tab-table" : "Table",
             "tab-map" : "Map",
             "tab-plot" : "Plot",
@@ -62,6 +63,7 @@ language = {
         // Part 1 - Localication of HTML tags (based on ID)
         // These are mandatory for all type of databases
         "html-tag-id" : {
+            "main-title" : "Svenska skidområden",
             "tab-table" : "Tabell",
             "tab-map" : "Karta",
             "tab-plot" : "Diagram",

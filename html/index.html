@@ -1,12 +1,22 @@
+<!--
+    Destination Comparison
+
+    A generic HTML/CSS/Javascript page for displaying comparison of 
+    destinations. The properties of the destinations are defined in
+    a separate database which is dynamically loaded based on the
+    URL parameter called "data". The database shall also include
+    localization data.
+
+    Copyright (c) Joel Midstjärna
+-->
 <html>
 
 <!--------------------------------------------------------------------------->
 <head>
-<title>Sweski</title>
+<title id="main-title">Destination Comparison</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/css/ol.css" type="text/css">
 <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
 <script src="Chart.min.js"></script>
-<script src="data.js"></script>
 <style>
 
 /****************************************************************************/
@@ -131,6 +141,27 @@
 
 window.onload = function() {
 
+    // Check which database to load
+    const params = new URLSearchParams(window.location.search);
+    var database_url = "data.js"; // Default
+    if (params.has("data")) {
+        database_url = params.get("data");
+    }
+
+    // Load database
+    var script = document.createElement("script");
+    script.src = database_url;
+    script.onload = function () {
+        setup();
+    };
+    script.onerror = function() {
+        alert("Invalid data url: " + database_url);
+    }
+    document.body.appendChild(script);
+};
+
+// Main setup. Called when database (javascript) has been loaded.
+function setup() {
     configSetup();
 
     localize();
@@ -145,7 +176,7 @@ window.onload = function() {
     mapSetup();
 
     settingsSetup();
-};
+}
 
 // Update localization for HTML tags
 function localize() {
