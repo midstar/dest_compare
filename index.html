@@ -90,6 +90,11 @@
     cursor:pointer;
 }
 
+.clickable:hover {
+    font-size: 13px;
+    cursor:pointer;
+}
+
 /****************************************************************************/
 /* Map style */
 
@@ -363,6 +368,11 @@ function tableUpdate() {
             var key = includedKeys[j];
             var cell = document.createElement("td");
             cell.innerHTML = elem[key];
+            if (j==0) {
+                // First column is clickable
+                cell.classList.add("clickable");
+                cell.setAttribute("onclick", "mapView(\"" + elem["latitude"] + "\", " + elem["longitude"] + ")");
+            }
             row.appendChild(cell);
         }
         table.appendChild(row);
@@ -375,7 +385,7 @@ function tableUpdate() {
 var map = undefined;
 var mapSelectHome = false;
 
-function mapSetup() {
+function mapSetup(latitude, longitude, zoom) {
 
     // Create the map
     map = new ol.Map({
@@ -515,6 +525,15 @@ function mapUpdatePopup(popup, databaseElem) {
             table.appendChild(row);
         }
         popup.appendChild(table);
+    }
+}
+
+// View location on map
+function mapView(latitude, longitude) {
+    if (map != undefined) {
+        map.getView().setCenter(ol.proj.fromLonLat([longitude, latitude]));
+        map.getView().setZoom(15);
+        tabShow("tab-map");
     }
 }
 
