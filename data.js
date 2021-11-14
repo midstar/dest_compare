@@ -1,7 +1,6 @@
-// Defined in same order as presented in the table
+// Defined in same order as presented in the table. 
 keys = [
     "name",
-    "distance", // Manadatory - Will be calculated
     "altitude",
     "vertical_drop",
     "piste_count",
@@ -13,12 +12,13 @@ keys = [
     "lift_count",
     "lift_count@chair",
     "lift_count@surface",
-    "lift_count@gondola"
+    "lift_count@gondola",
+    "distance", // Manadatory - Will be calculated based on latitude, longitude
 ];
 
 // Language translations
 language = {
-    // Swedish language
+    // English language
     "English" : {
 
         // Part 1 - Localization of HTML tags (based on ID)

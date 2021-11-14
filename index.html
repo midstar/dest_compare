@@ -175,6 +175,11 @@ function setup() {
     // Will update the table and plot
     updateSort(config["sort_selected"], config["sort_ascending"]);
 
+    // Secure table columns are updated with the screen width
+    window.onresize = function() {
+        tableUpdate();
+    };
+
     mapSetup();
 
     settingsSetup();
@@ -311,11 +316,19 @@ function tableUpdate() {
     var ascending = config["sort_ascending"];
     var table = document.getElementById("table");
 
-    // On small screens or browser sizes and if many keys, remove all
-    // subkeys
-    var removeSubkeys = false;
-    if ((window.innerWidth < 1000) && (keys.length > 5)) {
-        removeSubkeys = true;
+    // Remove keys (i.e. table columns) if the browser width is small.
+    // Keys are removed in following order:
+    //  1. Subkeys (i.e. keys that includes @)
+    //  2. Keys from the end of the keys array
+    var includedKeys = [];
+    const MIN_WITH_PER_KEY = 70; // In pixels
+    var maxKeys = Math.round(window.innerWidth / MIN_WITH_PER_KEY);
+    for (var i = 0 ; i < keys.length ; i++) {
+        if ((keys.length > maxKeys) && keys[i].includes("@"))
+            continue; // Never include subkeys if we need to remove keys
+        includedKeys.push(keys[i]);
+        if (includedKeys.length >= maxKeys)
+            break; // We are done
     }
 
     // Delete old elements
@@ -323,13 +336,12 @@ function tableUpdate() {
 
     // Generate titles (th)
     var row_head = document.createElement("tr");
-    for (var i = 0 ; i < keys.length ; i++) {
-        if (removeSubkeys && keys[i].includes("@"))
-            continue; // Skip this key
+    for (var i = 0 ; i < includedKeys.length ; i++) {
+        var key = includedKeys[i];
         var cell_head = document.createElement("th");
         var symbol = "";
         var clickAscending = "true";
-        if (keys[i] == selected) {
+        if (key == selected) {
             if (ascending) {
                 symbol = " &#8595;";
                 clickAscending = "false";
@@ -337,8 +349,8 @@ function tableUpdate() {
                 symbol = " &#8593;";
             }
         }
-        cell_head.setAttribute("onclick", "updateSort(\"" + keys[i] + "\", " + clickAscending + ")");
-        cell_head.innerHTML = language[config["lang"]][keys[i]] + symbol;
+        cell_head.setAttribute("onclick", "updateSort(\"" + key + "\", " + clickAscending + ")");
+        cell_head.innerHTML = language[config["lang"]][key] + symbol;
         row_head.appendChild(cell_head);
     }
     table.appendChild(row_head);
@@ -347,11 +359,10 @@ function tableUpdate() {
     for (var i = 0; i < database.length ; i++) {
         var elem = database[i];
         var row = document.createElement("tr");
-        for (var j = 0 ; j < keys.length ; j++) {
-            if (removeSubkeys && keys[j].includes("@"))
-                continue; // Skip this key
+        for (var j = 0 ; j < includedKeys.length ; j++) {
+            var key = includedKeys[j];
             var cell = document.createElement("td");
-            cell.innerHTML = elem[keys[j]];
+            cell.innerHTML = elem[key];
             row.appendChild(cell);
         }
         table.appendChild(row);
