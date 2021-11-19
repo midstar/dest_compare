@@ -224,6 +224,26 @@ function databasePreprocess() {
         elem["distance"] = calcDist(
             elem["latitude"],   elem["longitude"],
             config["latitude"], config["longitude"]);
+
+        // Summarize all sub-properties
+        var parentProps = {};
+        for (const [key, value] of Object.entries(elem)) {
+            if (key.includes("@")) {
+                var parentProp = key.split("@")[0];
+                if (parentProp in parentProps) {
+                    parentProps[parentProp] += value;
+                } else {
+                    parentProps[parentProp] = value;
+                }
+            }
+        }
+
+        // Add summary of sub-properties unless already exists
+        for (const [key, value] of Object.entries(parentProps)) {
+            if (key in elem == false) {
+                elem[key] = value; 
+            }
+        }
     }    
 }
 
